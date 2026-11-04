@@ -7,7 +7,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name="com.sofiamagalhaes.voyages.MainActivity"
+            android:name="com.voyages.memories.MainActivity"
             android:exported="true">
 
             <intent-filter>
