@@ -1,10 +1,11 @@
-name: Build Voyages Android APK
+name: Build Memories Android APK
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
+      - memories-v2-preparation
     paths:
       - "app/**"
       - "build.gradle"
@@ -27,12 +28,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Build debug APK
+      - name: Build test APK (not for installation over existing app)
         run: gradle --no-daemon assembleDebug
 
-      - name: Upload Voyages APK
+      - name: Upload Memories test APK
         uses: actions/upload-artifact@v4
         with:
-          name: Voyages-Android-APK
+          name: Memories-V2-TEST-DO-NOT-INSTALL
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
