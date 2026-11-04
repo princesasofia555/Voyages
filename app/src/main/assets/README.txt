@@ -1,0 +1,1 @@
+Memories - Voyages Android assets
