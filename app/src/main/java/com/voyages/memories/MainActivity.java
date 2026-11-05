@@ -32,16 +32,34 @@ public class MainActivity extends Activity {
                                              FileChooserParams params) {
                 if (pendingFileChooser != null) pendingFileChooser.onReceiveValue(null);
                 pendingFileChooser = callback;
+                // Respect the HTML input accept attribute: photos use image/*,
+                // while Restore uses application/json.
+                String[] acceptTypes = params.getAcceptTypes();
+                String mimeType = "*/*";
+                if (acceptTypes != null) {
+                    for (String type : acceptTypes) {
+                        if (type != null && !type.trim().isEmpty()) {
+                            mimeType = type.trim().split(",")[0].trim();
+                            break;
+                        }
+                    }
+                }
+                if (mimeType.startsWith(".")) {
+                    mimeType = ".json".equalsIgnoreCase(mimeType)
+                            ? "application/json" : "*/*";
+                }
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("application/json");
+                intent.setType(mimeType);
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,
+                        params.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE);
                 try {
                     startActivityForResult(intent, OPEN_RESTORE_FILE);
                     return true;
                 } catch (Exception e) {
                     pendingFileChooser = null;
                     callback.onReceiveValue(null);
-                    Toast.makeText(MainActivity.this, "Unable to open backup file", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Unable to open file picker", Toast.LENGTH_LONG).show();
                     return true;
                 }
             }
