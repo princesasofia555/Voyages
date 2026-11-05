@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends Activity {
     private static final int CREATE_BACKUP_FILE = 1001;
-    private static final int OPEN_RESTORE_FILE = 1002;
+    private static final int OPEN_RESTORE_FILE = 1002;\n    private static final int OPEN_PHOTO_FILE = 1003;\n    private int pendingChooserRequestCode = OPEN_RESTORE_FILE;
     private WebView webView;
     private String pendingBackup;
     private ValueCallback<Uri[]> pendingFileChooser;
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,
                         params.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE);
                 try {
-                    startActivityForResult(intent, OPEN_RESTORE_FILE);
+                    pendingChooserRequestCode = mimeType.startsWith("image/") ? OPEN_PHOTO_FILE : OPEN_RESTORE_FILE;\n                    startActivityForResult(intent, pendingChooserRequestCode);
                     return true;
                 } catch (Exception e) {
                     pendingFileChooser = null;
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == OPEN_RESTORE_FILE) {
+        if (requestCode == OPEN_RESTORE_FILE || requestCode == OPEN_PHOTO_FILE) {
             ValueCallback<Uri[]> callback = pendingFileChooser;
             pendingFileChooser = null;
             if (callback != null) {
