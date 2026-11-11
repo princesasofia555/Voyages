@@ -155,6 +155,31 @@ group_after="const cityCore=memoriesCityKey(p.city);const key=p.kind+'|'+norm(p.
 assert s.count(group_before)==1,"Unexpected map-grouping code"
 s=s.replace(group_before,group_after,1)
 
+# Hotel photo enlargement: preserve the approved star plaques, place/date and card heights.
+hotel_photo_css = r'''<style id="memories-v2-hotel-photo-enlargement">
+#hotelScreen #hotelList .rowBtn{
+  grid-template-columns:clamp(142px,28vw,195px) minmax(0,1fr) auto!important;
+}
+#hotelScreen #hotelList .visual{
+  width:100%!important;max-width:none!important;
+  height:100%!important;min-height:126px!important;
+  overflow:hidden!important;
+}
+#hotelScreen #hotelList .visual img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+}
+#hotelScreen #hotelList .cardInfo{
+  min-width:0!important;
+}
+@media(max-width:500px){
+  #hotelScreen #hotelList .rowBtn{
+    grid-template-columns:clamp(118px,30vw,155px) minmax(0,1fr) auto!important;
+  }
+}
+</style>'''
+assert s.count('</head>')==1
+s=s.replace('</head>',hotel_photo_css+'</head>',1)
+
 # A dedicated blank end cover, still part of the book (not the home cover).
 # It uses the same approved burgundy/gold leather color palette.
 end_page=r'''
