@@ -65,8 +65,8 @@ s=s.replace(post,"if(!memoriesGeoValid(obj)){const geo=memoriesOfflineCoords(obj
 # Ensure map is refreshed after adding/restoring an experience as well.
 s=s.replace("persist();$('modal').classList.add('hidden');render();", "persist();renderFlatMap();$('modal').classList.add('hidden');render();",1)
 # Only the Selected plaque caption: never alter stars or Bib Gourmand.
-caption_before = '\`<span class="mic-caption">${esc(enAward(mich))}</span>\`'
-caption_after = '\`<span class="mic-caption">${esc(/selected|sélection|selection/i.test(mich) ? "Selected" : enAward(mich))}</span>\`'
+caption_before = '`<span class="mic-caption">${esc(enAward(mich))}</span>`'
+caption_after = '`<span class="mic-caption">${esc(/selected|sélection|selection/i.test(mich) ? "Selected" : enAward(mich))}</span>`'
 assert s.count(caption_before) == 1, "Expected exactly one MICHELIN caption"
 s = s.replace(caption_before, caption_after, 1)
 html_path.write_text(s,encoding="utf-8")
