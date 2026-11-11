@@ -49,6 +49,11 @@ jobs:
           print("Globe navigation corrected; restaurant and hotel designs unchanged.")
           PY
 
+      - name: Generate offline globe improvements and custom app icon
+        run: |
+          python3 -m pip install --quiet --break-system-packages Pillow
+          python3 scripts/prepare_v2_android.py
+
       - name: Build test APK (not for installation over existing app)
         run: gradle --no-daemon assembleDebug
 
