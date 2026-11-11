@@ -8,6 +8,7 @@ on:
       - memories-v2-preparation
     paths:
       - "app/**"
+      - "scripts/prepare_v2_android.py"
       - "build.gradle"
       - "settings.gradle"
       - ".github/workflows/main.yml"
