@@ -69,6 +69,49 @@ caption_before = '`<span class="mic-caption">${esc(enAward(mich))}</span>`'
 caption_after = '`<span class="mic-caption">${esc(/selected|sélection|selection/i.test(mich) ? "Selected" : enAward(mich))}</span>`'
 assert s.count(caption_before) == 1, "Expected exactly one MICHELIN caption"
 s = s.replace(caption_before, caption_after, 1)
+# City and country occupy a maximum of two compact lines.
+helper = '''
+function memoriesLocationTwoLines(raw){
+ const location=enPlace(raw||'');
+ const cut=location.lastIndexOf(',');
+ const city=cut>=0?location.slice(0,cut).trim():location.trim();
+ const country=cut>=0?location.slice(cut+1).trim():'';
+ return '<span class="place-city">'+esc(city)+'</span><span class="place-country">'+esc(country)+'</span>';
+}
+'''
+assert s.count('function renderHotels(){')==1
+s=s.replace('function renderHotels(){',helper+'\nfunction renderHotels(){',1)
+res_old='<span class="meta">${esc(enPlace(x.city))}</span></span><span class="rest-visit-date"'
+hot_old='<span class="meta hotel-location">${esc(enPlace(x.city))}</span><span class="hotel-visit-date">'
+assert s.count(res_old)==1, 'restaurant location pattern changed'
+assert s.count(hot_old)==1, 'hotel location pattern changed'
+res_new='<span class="meta memories-two-line-location">${memoriesLocationTwoLines(x.city)}</span></span><span class="rest-visit-date"'
+hot_new='<span class="meta hotel-location memories-two-line-location">${memoriesLocationTwoLines(x.city)}</span><span class="hotel-visit-date">'
+s=s.replace(res_old,res_new,1)
+s=s.replace(hot_old,hot_new,1)
+css='''<style id="memories-v2-city-country-lines">
+#listScreen #list .cardInfo .memories-two-line-location,
+#hotelScreen #hotelList .cardInfo .memories-two-line-location {
+display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+width:100%!important;max-width:100%!important;min-width:0!important;
+overflow:hidden!important;white-space:normal!important;
+font-size:clamp(11px,1.5vw,14px)!important;line-height:1.05!important;margin-top:2px!important;
+}
+#listScreen #list .memories-two-line-location .place-city,
+#listScreen #list .memories-two-line-location .place-country,
+#hotelScreen #hotelList .memories-two-line-location .place-city,
+#hotelScreen #hotelList .memories-two-line-location .place-country {
+display:block!important;width:100%!important;max-width:100%!important;
+overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+line-height:1.05!important;min-height:1.05em!important;
+}
+@media (max-width:580px){
+#listScreen #list .cardInfo .memories-two-line-location,
+#hotelScreen #hotelList .cardInfo .memories-two-line-location{font-size:11px!important}
+}
+</style>'''
+assert '</head>' in s
+s=s.replace('</head>',css+'</head>',1)
 html_path.write_text(s,encoding="utf-8")
 print("Offline globe coordinate inference and live counter refresh prepared.")
 
