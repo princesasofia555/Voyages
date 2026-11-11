@@ -205,7 +205,7 @@ sync_before="tools.hidden=covered;hint.hidden=covered;arrows.hidden=covered;"
 sync_after="tools.hidden=covered||current==='end';hint.hidden=covered||current==='end';arrows.hidden=covered||current==='end';"
 assert s.count(sync_before)==1
 s=s.replace(sync_before,sync_after,1)
-touch_before="#globeScreen,#listScreen,#hotelScreen'))return;"
+touch_before="#mapScreen,#listScreen,#hotelScreen'))return;"
 touch_after="#globeScreen,#listScreen,#hotelScreen,#mapScreen,#endScreen'))return;"
 assert s.count(touch_before)==1
 s=s.replace(touch_before,touch_after,1)
