@@ -138,3 +138,81 @@ assert 'android:icon=' not in xml
 xml=xml.replace('<application','<application android:icon="@drawable/memories_launcher"',1)
 manifest.write_text(xml)
 print("Custom icon generated from the validated cover:",out)
+
+
+# Memories V2 book flow: restaurants -> hotels -> globe -> silent back cover.
+# The source book navigation is patched after the workflow's 'globe' -> 'map'
+# compatibility fix, avoiding changes to any saved experiences or photo fields.
+pages_before="const pages=['map','list','hotels'];"
+pages_after="const pages=['list','hotels','map','end'];"
+assert s.count(pages_before)==1, "Expected exactly one V2 page sequence"
+s=s.replace(pages_before,pages_after,1)
+
+# Distinguish the same establishment from another only by its city, not
+# by whether the country is written Suisse or Switzerland.
+group_before="const key=p.kind+'|'+norm(p.name)+'|'+norm(p.city);"
+group_after="const cityCore=String(p.city||'').split(',')[0];const key=p.kind+'|'+norm(p.name)+'|'+norm(cityCore);"
+assert s.count(group_before)==1,"Unexpected map-grouping code"
+s=s.replace(group_before,group_after,1)
+
+# A dedicated blank end cover, still part of the book (not the home cover).
+# It uses the same approved burgundy/gold leather color palette.
+end_page=r'''
+<style id="memories-v2-end-page-style">
+#endScreen{display:none!important;min-height:100dvh;padding:0!important;background:#210714!important}
+#endScreen.active{display:flex!important;align-items:center;justify-content:center}
+#memoriesEndBook{position:relative;display:block;width:min(100vw,65vh);height:min(100dvh,155vw);max-width:100%;max-height:100dvh;min-height:86dvh;background:
+radial-gradient(ellipse at 42% 38%,#8c191f 0%,#65080f 49%,#340307 100%);border:16px ridge #6b080d;border-radius:25px 19px 17px 25px;
+box-shadow:inset 0 0 0 5px #250105,inset 0 0 22px #170105,8px 3px 22px #000b}
+#memoriesEndBook::before{content:'';position:absolute;inset:16px 18px 25px 15px;border:5px double #e8ac38;box-shadow:0 0 0 2px #502206,inset 0 0 0 3px #3b060a,inset 0 0 16px #120002;pointer-events:none}
+#memoriesEndBook::after{content:'';position:absolute;left:10px;right:10px;bottom:1px;height:13px;
+background:linear-gradient(180deg,#ffe082,#dca42f 32%,#fff1a0 53%,#92500c 100%);border-radius:0 0 12px 12px;box-shadow:0 0 4px #1b0205}
+#memoriesEndBook .book-corner{position:absolute;z-index:1;color:#e9aa34;font-family:serif;font-size:clamp(43px,11vw,85px);line-height:1;text-shadow:1px 2px 0 #76360b,0 0 7px #ffde8b}
+#memoriesEndBook .tl{top:20px;left:21px}#memoriesEndBook .tr{top:20px;right:21px;transform:scaleX(-1)}
+#memoriesEndBook .bl{bottom:36px;left:21px;transform:scaleY(-1)}
+#memoriesEndBook .br{bottom:36px;right:21px;transform:scale(-1)}
+#memBookTools{top:calc(env(safe-area-inset-top,0px) + 18px)!important;right:18px!important;
+width:43px!important;height:43px!important;padding:0!important;display:grid!important;place-items:center!important;
+border:1.5px solid #d9ad60!important;border-radius:50%!important;
+background:radial-gradient(circle at 32% 22%,#7e3655,#351022 72%)!important;
+color:#ffe4aa!important;font:22px Georgia,serif!important;box-shadow:inset 0 0 0 2px #371423,0 4px 14px #0008!important}
+#memBookTools[hidden]{display:none!important}
+#memBookMenu{top:calc(env(safe-area-inset-top,0px) + 66px)!important}
+</style>
+<section id="endScreen" class="screen" aria-label="Blank back cover">
+ <div id="memoriesEndBook" aria-hidden="true"><span class="book-corner tl">❦</span><span class="book-corner tr">❦</span><span class="book-corner bl">❦</span><span class="book-corner br">❦</span></div>
+</section>
+'''
+anchor='<style id="memoriesBookNavigationStyles">'
+assert s.count(anchor)==1
+s=s.replace(anchor,end_page+anchor,1)
+button_before='<button id="memBookTools" type="button" hidden aria-label="Open tools">☰ Tools</button>'
+assert s.count(button_before)==1
+s=s.replace(button_before,'<button id="memBookTools" type="button" hidden aria-label="Tools" title="Tools">✦</button>',1)
+
+# Keep navigation working for the new final page; it is deliberately blank.
+tab_before="const result=oldShowTab.apply(this,arguments);"
+tab_after="""if(page==='end'){
+        document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
+        document.getElementById('endScreen').classList.add('active');
+        sync();window.scrollTo(0,0);return;
+      }
+      document.getElementById('endScreen').classList.remove('active');
+      const result=oldShowTab.apply(this,arguments);"""
+assert s.count(tab_before)==1
+s=s.replace(tab_before,tab_after,1)
+sync_before="tools.hidden=covered;hint.hidden=covered;arrows.hidden=covered;"
+sync_after="tools.hidden=covered||current==='end';hint.hidden=covered||current==='end';arrows.hidden=covered||current==='end';"
+assert s.count(sync_before)==1
+s=s.replace(sync_before,sync_after,1)
+touch_before="#globeScreen,#listScreen,#hotelScreen'))return;"
+touch_after="#globeScreen,#listScreen,#hotelScreen,#mapScreen,#endScreen'))return;"
+assert s.count(touch_before)==1
+s=s.replace(touch_before,touch_after,1)
+observer_before="const observer=new MutationObserver(sync);"
+observer_after="cover.addEventListener('click',function(){window.showTab('list');window.scrollTo(0,0)});\n  const observer=new MutationObserver(sync);"
+assert s.count(observer_before)==1
+s=s.replace(observer_before,observer_after,1)
+
+html_path.write_text(s,encoding='utf-8')
+print("Book flow + blank end page + compact tools button + country-proof grouping ready.")
