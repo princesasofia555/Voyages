@@ -18,7 +18,8 @@ function memoriesGeoValid(x){
 }
 function memoriesCityKey(v){
   return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .toLowerCase().split(',')[0].replace(/\([^)]*\)/g,'')
+    .toLowerCase().replace(/(?:,?\s+)(?:switzerland|suisse|france|italy|italie|portugal|united kingdom|royaume-uni|germany|allemagne|spain|espagne)$/i,'')
+    .split(',')[0].replace(/\([^)]*\)/g,'')
     .replace(/[^a-z0-9]/g,'');
 }
 function memoriesOfflineCoords(city,name){
@@ -73,9 +74,11 @@ s = s.replace(caption_before, caption_after, 1)
 helper = '''
 function memoriesLocationTwoLines(raw){
  const location=enPlace(raw||'');
+ const countries=/(?:^|[,\s]+)(Switzerland|Suisse|France|Italy|Italie|Portugal|United Kingdom|Royaume-Uni|Germany|Allemagne|Spain|Espagne)\s*$/i;
+ const match=location.match(countries);
  const cut=location.lastIndexOf(',');
- const city=cut>=0?location.slice(0,cut).trim():location.trim();
- const country=cut>=0?location.slice(cut+1).trim():'';
+ const city=match?location.slice(0,match.index).replace(/[,\s]+$/,'').trim():(cut>=0?location.slice(0,cut).trim():location.trim());
+ const country=match?match[1]:(cut>=0?location.slice(cut+1).trim():'');
  return '<span class="place-city">'+esc(city)+'</span><span class="place-country">'+esc(country)+'</span>';
 }
 '''
