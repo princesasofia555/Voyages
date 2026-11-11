@@ -74,6 +74,34 @@ s = s.replace(caption_before, caption_after, 1)
 caption_pos=s.find('class="mic-caption"')
 print("SELECTED_BADGE_SOURCE:",s[max(0,caption_pos-500):caption_pos+250])
 
+# Distinguish MICHELIN Selected from Bib Gourmand with no misleading star/flower.
+# Both use the existing red MICHELIN plaque position; actual stars stay unchanged.
+no_star_before = """\${starCount?michelinFlowers(starCount):'<span class="mic-selected-mark">✿</span>'}"""
+no_star_after = """\${starCount?michelinFlowers(starCount):''}"""
+assert s.count(no_star_before)==1, "Expected Michelin non-star symbol"
+s=s.replace(no_star_before,no_star_after,1)
+
+# La Fleur de Sel, Cossonay, January 2023: approved Bib Gourmand test case.
+fleur_pattern=r'("name": "La Fleur de Sel"[^}]*?"date": "13\.01\.2023"[^}]*?"mich": ")Sélection(")'
+assert len(re.findall(fleur_pattern,s))==1, "Expected one dated Fleur de Sel entry"
+s=re.sub(fleur_pattern,lambda m:m.group(1)+"Bib Gourmand"+m.group(2),s,count=1)
+
+# Existing saved V2 catalogues: update only the original visit's award, if still Selected.
+fleur_update=r"""
+(function(){
+ let changed=false;
+ for(const visit of items){
+   if(visit.name==='La Fleur de Sel' && visit.date==='13.01.2023' &&
+      /^(Sélection|Selection|Selected|Sélection Guide MICHELIN)$/i.test(String(visit.mich||'').trim())){
+     visit.mich='Bib Gourmand';changed=true;
+   }
+ }
+ if(changed)persist();
+})();
+"""
+assert s.count('function restaurantPlaques(x){')==1
+s=s.replace('function restaurantPlaques(x){',fleur_update+'\nfunction restaurantPlaques(x){',1)
+
 # City and country occupy a maximum of two compact lines.
 helper = '''
 function memoriesLocationTwoLines(raw){
