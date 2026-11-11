@@ -151,7 +151,7 @@ s=s.replace(pages_before,pages_after,1)
 # Distinguish the same establishment from another only by its city, not
 # by whether the country is written Suisse or Switzerland.
 group_before="const key=p.kind+'|'+norm(p.name)+'|'+norm(p.city);"
-group_after="const cityCore=String(p.city||'').split(',')[0];const key=p.kind+'|'+norm(p.name)+'|'+norm(cityCore);"
+group_after="const cityCore=memoriesCityKey(p.city);const key=p.kind+'|'+norm(p.name)+'|'+cityCore;"
 assert s.count(group_before)==1,"Unexpected map-grouping code"
 s=s.replace(group_before,group_after,1)
 
