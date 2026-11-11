@@ -70,6 +70,10 @@ caption_before = '`<span class="mic-caption">${esc(enAward(mich))}</span>`'
 caption_after = '`<span class="mic-caption">${esc(/selected|sélection|selection/i.test(mich) ? "Selected" : enAward(mich))}</span>`'
 assert s.count(caption_before) == 1, "Expected exactly one MICHELIN caption"
 s = s.replace(caption_before, caption_after, 1)
+# Build-time diagnostic: identify the decorative symbol structure accurately.
+caption_pos=s.find('class="mic-caption"')
+print("SELECTED_BADGE_SOURCE:",s[max(0,caption_pos-500):caption_pos+250])
+
 # City and country occupy a maximum of two compact lines.
 helper = '''
 function memoriesLocationTwoLines(raw){
