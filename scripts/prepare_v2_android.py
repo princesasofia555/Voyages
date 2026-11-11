@@ -53,10 +53,8 @@ function memoriesFillMissingCoordinates(){
   }
 }
 '''
-s=s.replace(needle,helper+"\n"+needle,1)
-# Recalculate location and counters whenever entering the map.
-s=s.replace("function renderFlatMap(){  const raw=", "function renderFlatMap(){  memoriesFillMissingCoordinates(); const raw=",1)
-assert "function renderFlatMap(){  memoriesFillMissingCoordinates(); const raw=" in s
+s=s.replace(needle,helper+"\n"+"function renderFlatMap(){ memoriesFillMissingCoordinates(); ",1)
+assert "function renderFlatMap(){ memoriesFillMissingCoordinates();" in s
 # Add inferred geographic coordinates to all *new* records and edits of old records.
 hotel="let stay={n,city,date:m+'.'+y,stars:Number($('newHotelStars').value),photo,notes:$('newHotelNotes').value.trim(),lat:null,lon:null};"
 assert s.count(hotel)==1
