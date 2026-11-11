@@ -50,6 +50,7 @@ jobs:
           print("Globe navigation corrected; restaurant and hotel designs unchanged.")
           PY
 
+      # V2 two-line city/country card layout; preserve badge positions.
       - name: Generate offline globe improvements and custom app icon
         run: |
           python3 -m pip install --quiet --break-system-packages Pillow
