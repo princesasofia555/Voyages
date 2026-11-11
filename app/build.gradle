@@ -1,3 +1,22 @@
 plugins { id 'com.android.application' }
-android { namespace 'com.sofiamagalhaes.voyages'; compileSdk 35
- defaultConfig { applicationId 'com.sofiamagalhaes.voyages'; minSdk 26; targetSdk 35; versionCode 1; versionName '1.0' } }
+
+android {
+    namespace 'com.sofiamagalhaes.voyages'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.sofiamagalhaes.voyages'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        debug {
+            // V2 tests install beside existing Memories, with separate storage.
+            applicationIdSuffix '.v2test'
+            versionNameSuffix '-test'
+        }
+    }
+}
