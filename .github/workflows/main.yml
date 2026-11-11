@@ -28,6 +28,27 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Repair globe navigation for the offline Android build
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("app/src/main/assets/index.html")
+          html = p.read_text(encoding="utf-8")
+          fixes = {
+              "const pages=['globe','list','hotels'];": "const pages=['map','list','hotels'];",
+              "||'globe',busy=false": "||'map',busy=false",
+              "showTab('globe');selectPoint(x)": "showTab('map');selectPoint(x)",
+              "if(!e.target.closest('#globeScreen,#listScreen,#hotelScreen'))return;": "if(!e.target.closest('#mapScreen,#listScreen,#hotelScreen'))return;",
+          }
+          for before, after in fixes.items():
+              count = html.count(before)
+              if count != 1:
+                  raise RuntimeError(f"Expected 1 occurrence of {before!r}, found {count}")
+              html = html.replace(before, after, 1)
+          p.write_text(html, encoding="utf-8")
+          print("Globe navigation corrected; restaurant and hotel designs unchanged.")
+          PY
+
       - name: Build test APK (not for installation over existing app)
         run: gradle --no-daemon assembleDebug
 
