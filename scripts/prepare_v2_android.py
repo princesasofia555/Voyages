@@ -274,6 +274,41 @@ for term in ('function restaurantPlaques(x){','class="rowBtn"','class="rest-plaq
 for term in ('function restaurantPlaques(x){','class="rest-visit-date"','function enPlace(v)','function render(){'):
     start=s.find(term)
     if start>=0: print("RESTAURANT_MARKUP_DETAIL",term,repr(s[start:start+4200]))
+# Approved restaurant order: Gault&Millau logo next to photo, yellow plaque center, MICHELIN right.
+plaque_order_before='return `<span class="rest-plaques">${mic}${yellow}${white}</span>`;'
+plaque_order_after='return `<span class="rest-plaques">${white}${yellow}${mic}</span>`;'
+assert s.count(plaque_order_before)==1, "Unexpected restaurant plaque order"
+s=s.replace(plaque_order_before,plaque_order_after,1)
+plaque_css=r'''<style id="memories-v3-fixed-restaurant-plaques">
+#listScreen #list .rowBtn .rest-visit-date{align-self:end!important}
+#listScreen #list .rowBtn .rest-plaques{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ align-items:end!important;align-self:end!important;min-width:0!important;
+}
+#listScreen #list .rowBtn .rest-plaques > .rest-plaque{
+ align-self:end!important;justify-self:center!important;
+}
+#listScreen #list .rowBtn .cardInfo{align-self:start!important}
+</style>'''
+assert s.count('</head>')==1
+s=s.replace('</head>',plaque_css+'</head>',1)
+
+# Correct the original Crissier establishment name when older saved data used English.
+name_helper=r'''
+function memoriesOriginalRestaurantName(x){
+ const name=String(x.name||'');
+ if(/crissier/i.test(String(x.city||'')) && /(?:\bCity(?: Hall)?\b|Hôtel de Ville|Hotel de Ville)/i.test(name)){
+   return 'Restaurant de l’Hôtel de Ville';
+ }
+ return name;
+}
+'''
+assert s.count('function render(){')==1
+s=s.replace('function render(){',name_helper+'\nfunction render(){',1)
+name_card='<span class="name">${esc(x.name)}</span>'
+assert s.count(name_card)>=1
+s=s.replace(name_card,'<span class="name">${esc(memoriesOriginalRestaurantName(x))}</span>',1)
+
 # A dedicated blank end cover, still part of the book (not the home cover).
 # It uses the same approved burgundy/gold leather color palette.
 end_page=r'''
