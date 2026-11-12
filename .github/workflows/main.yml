@@ -56,12 +56,12 @@ jobs:
           python3 -m pip install --quiet --break-system-packages Pillow
           python3 scripts/prepare_v2_android.py
 
-      - name: Build test APK (not for installation over existing app)
+      - name: Build independent V3 test APK (never replaces V1/V2)
         run: gradle --no-daemon assembleDebug
 
       - name: Upload Memories test APK
         uses: actions/upload-artifact@v4
         with:
-          name: Memories-V2-TEST-DO-NOT-INSTALL
+          name: Memories-V3-TEST-SEPARATE-INSTALL
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
