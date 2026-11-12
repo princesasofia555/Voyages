@@ -242,19 +242,36 @@ s=s.replace('</head>',hotel_photo_css+'</head>',1)
 
 # Restaurant photo enlargement: preserve lower-edge alignment of MICHELIN/Gault&Millau plaques.
 restaurant_photo_css = r'''<style id="memories-v3-restaurant-photo-enlargement">
+/* Restaurant-only: the user-approved Le Café Suisse composition. */
 #listScreen #list .rowBtn{
-  grid-template-columns:clamp(142px,28vw,195px) minmax(0,1fr) auto!important;
+  display:block!important;position:relative!important;
+  box-sizing:border-box!important;
+  height:clamp(180px,28vw,226px)!important;
+  min-height:180px!important;
+  width:100%!important;padding:0!important;overflow:hidden!important;
 }
-#listScreen #list .visual{
-  width:100%!important;max-width:none!important;height:100%!important;
-  min-height:126px!important;overflow:hidden!important;
+#listScreen #list .rowBtn .visual{
+  display:block!important;position:absolute!important;
+  left:0!important;top:0!important;bottom:0!important;
+  width:32%!important;max-width:32%!important;height:100%!important;
+  min-height:0!important;overflow:hidden!important;
 }
-#listScreen #list .visual img{width:100%!important;height:100%!important;object-fit:cover!important}
-#listScreen #list .cardInfo{min-width:0!important}
-@media(max-width:500px){
-  #listScreen #list .rowBtn{
-    grid-template-columns:clamp(118px,30vw,155px) minmax(0,1fr) auto!important;
-  }
+#listScreen #list .rowBtn .visual img{
+  display:block;width:100%!important;height:100%!important;object-fit:cover!important;
+}
+#listScreen #list .rowBtn .cardInfo{
+  position:absolute!important;left:calc(32% + 12px)!important;
+  right:26px!important;top:10px!important;min-width:0!important;
+  max-height:calc(100% - 92px)!important;overflow:hidden!important;
+  margin:0!important;padding:0!important;text-align:left!important;
+}
+#listScreen #list .rowBtn .cardInfo .name{
+  display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden!important;line-height:1.05!important;max-width:100%!important;
+}
+#listScreen #list .rowBtn .chev{
+  position:absolute!important;right:8px!important;top:50%!important;
+  transform:translateY(-50%)!important;
 }
 </style>'''
 assert s.count('</head>')==1
@@ -280,15 +297,48 @@ plaque_order_after='return `<span class="rest-plaques">${white}${yellow}${mic}</
 assert s.count(plaque_order_before)==1, "Unexpected restaurant plaque order"
 s=s.replace(plaque_order_before,plaque_order_after,1)
 plaque_css=r'''<style id="memories-v3-fixed-restaurant-plaques">
-#listScreen #list .rowBtn .rest-visit-date{align-self:end!important}
+/* One bottom baseline, three fixed positions, even when badges are missing. */
+#listScreen #list .rowBtn .rest-visit-date{
+ position:absolute!important;left:calc(32% + 12px)!important;
+ bottom:8px!important;z-index:3!important;
+ align-self:auto!important;justify-self:auto!important;margin:0!important;
+}
 #listScreen #list .rowBtn .rest-plaques{
- display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
- align-items:end!important;align-self:end!important;min-width:0!important;
+ display:block!important;position:absolute!important;
+ left:calc(32% + 10px)!important;right:33px!important;
+ bottom:10px!important;height:105px!important;
+ width:auto!important;min-width:0!important;
+ margin:0!important;padding:0!important;
+ align-self:auto!important;overflow:visible!important;pointer-events:none!important;
 }
 #listScreen #list .rowBtn .rest-plaques > .rest-plaque{
- align-self:end!important;justify-self:center!important;
+ display:block!important;position:absolute!important;
+ margin:0!important;align-self:auto!important;justify-self:auto!important;
 }
-#listScreen #list .rowBtn .cardInfo{align-self:start!important}
+#listScreen #list .rowBtn .rest-plaques > .empty{display:none!important}
+#listScreen #list .rowBtn .rest-plaques > .score{
+ left:0!important;bottom:27px!important;right:auto!important;top:auto!important;
+ transform:none!important;
+}
+#listScreen #list .rowBtn .rest-plaques > .gault{
+ left:53%!important;right:auto!important;bottom:0!important;top:auto!important;
+ transform:translateX(-50%)!important;
+}
+#listScreen #list .rowBtn .rest-plaques > .michelin{
+ right:0!important;left:auto!important;bottom:0!important;top:auto!important;
+ transform:none!important;
+}
+@media(max-width:520px){
+ #listScreen #list .rowBtn .rest-plaques > .score{
+   transform:scale(.84)!important;transform-origin:bottom left!important;
+ }
+ #listScreen #list .rowBtn .rest-plaques > .gault{
+   transform:translateX(-50%) scale(.88)!important;transform-origin:bottom center!important;
+ }
+ #listScreen #list .rowBtn .rest-plaques > .michelin{
+   transform:scale(.88)!important;transform-origin:bottom right!important;
+ }
+}
 </style>'''
 assert s.count('</head>')==1
 s=s.replace('</head>',plaque_css+'</head>',1)
