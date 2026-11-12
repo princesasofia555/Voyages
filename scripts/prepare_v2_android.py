@@ -84,11 +84,15 @@ s=s.replace(no_star_before,no_star_after,1)
 # Bib Gourmand: white tongue-out smiling Michelin-man-style face, not a star.
 bib_markup = (
   '<span class="mic-selected-mark mic-bibendum-mark" aria-hidden="true">'
-  '<svg viewBox="0 0 40 40" width="21" height="21" xmlns="http://www.w3.org/2000/svg">'
-  '<g stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">'
-  '<path d="M13 11 Q8 5 15 5 Q19 1 24 5 Q33 3 32 12 Q37 18 31 23 Q35 29 28 31 Q20 35 12 29 Q5 26 10 21 Q4 16 13 11Z"/>'
-  '<path d="M13 20 Q20 26 28 20 M16 13 L16 15 M25 13 L25 15"/>'
-  '</g><path d="M19 23 Q24 23 23 29 Q20 33 19 27Z" fill="white"/>'
+  '<svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">'
+  '<g fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">'
+  '<path d="M13 15 Q9 11 15 8 Q16 3 22 6 Q27 2 32 7 Q39 8 36 15 Q42 19 38 25 Q41 32 35 36 Q30 41 23 38 Q15 41 11 34 Q7 29 11 24 Q7 19 13 15Z"/>'
+  '<path d="M13 14 Q24 11 36 14 M11 25 Q13 28 15 28 M34 28 Q37 27 38 25 M14 35 Q24 38 34 35"/>'
+  '<path d="M16 19 Q18 16 20 18 M28 18 Q30 16 32 19"/>'
+  '<path d="M17 26 Q24 33 31 26"/>'
+  '</g>'
+  '<g fill="#fff"><circle cx="19" cy="20.5" r="1.4"/><circle cx="29" cy="20.5" r="1.4"/></g>'
+  '<path d="M23 30 Q22.5 34 24.5 36.5 Q27 34 26 30Z" fill="#fff"/>'
   '</svg></span>'
 )
 assert s.count(no_star_after)==1, "Expected one MICHELIN symbol slot"
@@ -100,7 +104,7 @@ assert s.count(mic_class_before)==1
 s=s.replace(mic_class_before,mic_class_after,1)
 bib_css='''<style id="memories-bib-gourmand-plaque">
 .rest-plaque.michelin.bib-gourmand .mic-caption {display:none!important}
-.rest-plaque.michelin.bib-gourmand .mic-bibendum-mark svg {display:block;width:21px;height:21px}
+.rest-plaque.michelin.bib-gourmand .mic-bibendum-mark{display:flex!important;align-items:center;justify-content:center;line-height:1!important;margin:0 auto!important;max-height:32px!important}.rest-plaque.michelin.bib-gourmand .mic-bibendum-mark svg {display:block!important;width:32px!important;height:32px!important;flex:0 0 32px!important;stroke-linecap:round}
 </style>'''
 assert s.count('</head>')==1
 s=s.replace('</head>',bib_css+'</head>',1)
