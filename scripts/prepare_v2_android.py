@@ -85,14 +85,16 @@ s=s.replace(no_star_before,no_star_after,1)
 bib_markup = (
   '<span class="mic-selected-mark mic-bibendum-mark" aria-hidden="true">'
   '<svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">'
-  '<g fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">'
-  '<path d="M13 15 Q9 11 15 8 Q16 3 22 6 Q27 2 32 7 Q39 8 36 15 Q42 19 38 25 Q41 32 35 36 Q30 41 23 38 Q15 41 11 34 Q7 29 11 24 Q7 19 13 15Z"/>'
-  '<path d="M13 14 Q24 11 36 14 M11 25 Q13 28 15 28 M34 28 Q37 27 38 25 M14 35 Q24 38 34 35"/>'
-  '<path d="M16 19 Q18 16 20 18 M28 18 Q30 16 32 19"/>'
-  '<path d="M17 26 Q24 33 31 26"/>'
+  '<g fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'
+  '<path d="M24 7 C18 7 14 11 13 16 C10 18 8 23 10 27 C11 30 13 32 16 33 C20 39 29 39 33 33 C37 32 39 28 38 24 C39 20 37 17 34 15 C32 10 29 7 24 7Z"/>'
+  '<path d="M13 20 C10 20 10 27 13 29 M35 20 C39 20 39 27 36 29"/>'
+  '<ellipse cx="19" cy="21" rx="4.1" ry="6.2"/>'
+  '<ellipse cx="29" cy="21" rx="4.1" ry="6.2"/>'
+  '<path d="M21 28 Q24 25 27 28"/>'
+  '<path d="M17 31 Q24 38 31 31"/>'
   '</g>'
-  '<g fill="#fff"><circle cx="19" cy="20.5" r="1.4"/><circle cx="29" cy="20.5" r="1.4"/></g>'
-  '<path d="M23 30 Q22.5 34 24.5 36.5 Q27 34 26 30Z" fill="#fff"/>'
+  '<g fill="#fff"><ellipse cx="20" cy="22" rx="1.2" ry="1.9"/><ellipse cx="28" cy="22" rx="1.2" ry="1.9"/></g>'
+  '<path d="M23 34 Q24.5 38 26 34Z" fill="#fff"/>'
   '</svg></span>'
 )
 assert s.count(no_star_after)==1, "Expected one MICHELIN symbol slot"
