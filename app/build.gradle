@@ -8,14 +8,14 @@ android {
         applicationId 'com.sofiamagalhaes.voyages'
         minSdk 26
         targetSdk 35
-        versionCode 14
-        versionName '3.11'
+        versionCode 15
+        versionName '3.12'
     }
 
     buildTypes {
         debug {
-            // Isolated V3 preview 12: temporary side-by-side visual test, no existing app replacement.
-            applicationIdSuffix '.v3preview12'
+            // Isolated V3 preview 13: temporary side-by-side visual test, no existing app replacement.
+            applicationIdSuffix '.v3preview13'
             versionNameSuffix '-test'
         }
     }
