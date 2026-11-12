@@ -358,7 +358,7 @@ for match in list(re.finditer(r'[^{}]{0,180}\b(?:rest-plaques|rest-plaque|michel
 # Pin each restaurant plaque directly in the generated HTML to beat those rules.
 fixed_return_before='return `<span class="rest-plaques">${white}${yellow}${mic}</span>`;'
 fixed_return_after=r"""const pinned=(html,col,align,extra='')=>html.replace('<span class="rest-plaque', `<span style="position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;grid-column:${col}!important;justify-self:${align}!important;align-self:end!important;transform:none!important;margin:0!important;${extra}" class="rest-plaque`);
- return `<span class="rest-plaques" style="position:absolute!important;display:grid!important;left:calc(35% + 12px)!important;right:33px!important;top:auto!important;bottom:23px!important;height:106px!important;width:auto!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:end!important;overflow:visible!important;pointer-events:none!important;">${pinned(white,1,'start','margin-bottom:28px!important;')}${pinned(yellow,2,'center','width:96px!important;height:96px!important;min-width:96px!important;min-height:96px!important;max-width:96px!important;max-height:96px!important;aspect-ratio:1 / 1!important;box-sizing:border-box!important;')}${pinned(mic,3,'end','width:96px!important;height:96px!important;min-width:96px!important;min-height:96px!important;max-width:96px!important;max-height:96px!important;aspect-ratio:1 / 1!important;box-sizing:border-box!important;background:linear-gradient(140deg,#ec3343,#b60924)!important;color:#fff!important;opacity:1!important;mix-blend-mode:normal!important;filter:none!important;')}</span>`;"""
+ return `<span class="rest-plaques" style="position:absolute!important;display:grid!important;left:calc(35% + 12px)!important;right:33px!important;top:auto!important;bottom:23px!important;height:106px!important;width:auto!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:end!important;overflow:visible!important;pointer-events:none!important;">${pinned(white,1,'start','margin-bottom:28px!important;')}${pinned(yellow,2,'center','transform:translateX(40px)!important;width:96px!important;height:96px!important;min-width:96px!important;min-height:96px!important;max-width:96px!important;max-height:96px!important;aspect-ratio:1 / 1!important;box-sizing:border-box!important;')}${pinned(mic,3,'end','width:96px!important;height:96px!important;min-width:96px!important;min-height:96px!important;max-width:96px!important;max-height:96px!important;aspect-ratio:1 / 1!important;box-sizing:border-box!important;background:linear-gradient(140deg,#ec3343,#b60924)!important;color:#fff!important;opacity:1!important;mix-blend-mode:normal!important;filter:none!important;')}</span>`;"""
 assert s.count(fixed_return_before)==1,"Expected one restaurant plaque return"
 s=s.replace(fixed_return_before,fixed_return_after,1)
 rest_date_before='class="rest-visit-date" aria-label="Visit date"'
@@ -393,6 +393,22 @@ mic_fix_css=r'''<style id="memories-v3-michelin-red-repair">
 </style>'''
 assert s.count('</head>')==1
 s=s.replace('</head>',mic_fix_css+'</head>',1)
+
+# Final approved visual mock-up: slightly larger Gault&Millau toque artwork,
+# shifted gently to the right; yellow award closer to red award.
+# Restaurant-only: no hotel styles or photo proportions changed.
+approved_logo_css=r'''<style id="memories-v3-approved-toques-spacing">
+#listScreen #list .rowBtn .rest-plaques > .rest-plaque.gault{
+ transform:translateX(40px)!important;
+}
+#listScreen #list .rowBtn .rest-plaques > .rest-plaque.score .gm-authentic-logo{
+ width:98px!important;height:84px!important;max-width:none!important;
+ object-fit:contain!important;transform:translateX(5px)!important;
+ transform-origin:bottom left!important;
+}
+</style>'''
+assert s.count('</head>')==1
+s=s.replace('</head>',approved_logo_css+'</head>',1)
 
 # Correct the original Crissier establishment name when older saved data used English.
 name_helper=r'''
