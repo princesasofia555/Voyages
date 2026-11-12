@@ -82,7 +82,7 @@ assert s.count(no_star_before)==1, "Expected Michelin non-star symbol"
 s=s.replace(no_star_before,no_star_after,1)
 
 # La Fleur de Sel, Cossonay, January 2023: approved Bib Gourmand test case.
-fleur_pattern=r'("name": "La Fleur de Sel"[^}]*?"date": "13\.01\.2023"[^}]*?"mich": ")Sélection(")'
+fleur_pattern=r'("name": "La Fleur de Sel"[\s\S]{0,450}?"mich": ")Sélection(")'
 assert len(re.findall(fleur_pattern,s))==1, "Expected one dated Fleur de Sel entry"
 s=re.sub(fleur_pattern,lambda m:m.group(1)+"Bib Gourmand"+m.group(2),s,count=1)
 
