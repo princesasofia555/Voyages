@@ -109,6 +109,13 @@ bib_css='''<style id="memories-bib-gourmand-plaque">
 assert s.count('</head>')==1
 s=s.replace('</head>',bib_css+'</head>',1)
 
+# Only one MICHELIN wordmark on restaurant plaques: retain the top brand mark.
+michelin_footer_css='''<style id="memories-v3-single-michelin-wordmark">
+#listScreen #list .rest-plaque.michelin .mic-footer{display:none!important}
+</style>'''
+assert s.count('</head>')==1
+s=s.replace('</head>',michelin_footer_css+'</head>',1)
+
 # La Fleur de Sel, Cossonay, January 2023: approved Bib Gourmand test case.
 fleur_pattern=r'("name": "La Fleur de Sel"[\s\S]{0,450}?"mich": ")Sélection(")'
 fleur_matches=len(re.findall(fleur_pattern,s))
