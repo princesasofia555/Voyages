@@ -86,7 +86,7 @@ bib_markup = (
   '<span class="mic-selected-mark mic-bibendum-mark" aria-hidden="true">'
   '<svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">'
   '<g fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'
-  '<path d="M15 32 C11 30 9 27 10 23 C10 20 11 18 13 16 C14 11 18 7 24 7 C30 7 33 11 35 16 C38 19 39 22 38 26 C37 29 36 30 33 32"/>'
+  '<path d="M15 36 C11 33 9 29 10 24 C10 20 11 18 13 16 C14 11 18 7 24 7 C30 7 33 11 35 16 C38 19 39 22 38 26 C38 31 37 34 33 36"/>'
   '<path d="M13 20 C10 20 10 27 13 29 M35 20 C39 20 39 27 36 29"/>'
   '<ellipse cx="19" cy="21" rx="4.1" ry="6.2"/>'
   '<ellipse cx="29" cy="21" rx="4.1" ry="6.2"/>'
