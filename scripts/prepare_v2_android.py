@@ -240,6 +240,32 @@ hotel_photo_css = r'''<style id="memories-v2-hotel-photo-enlargement">
 assert s.count('</head>')==1
 s=s.replace('</head>',hotel_photo_css+'</head>',1)
 
+# Restaurant photo enlargement: preserve lower-edge alignment of MICHELIN/Gault&Millau plaques.
+restaurant_photo_css = r'''<style id="memories-v3-restaurant-photo-enlargement">
+#listScreen #list .rowBtn{
+  grid-template-columns:clamp(142px,28vw,195px) minmax(0,1fr) auto!important;
+}
+#listScreen #list .visual{
+  width:100%!important;max-width:none!important;height:100%!important;
+  min-height:126px!important;overflow:hidden!important;
+}
+#listScreen #list .visual img{width:100%!important;height:100%!important;object-fit:cover!important}
+#listScreen #list .cardInfo{min-width:0!important}
+@media(max-width:500px){
+  #listScreen #list .rowBtn{
+    grid-template-columns:clamp(118px,30vw,155px) minmax(0,1fr) auto!important;
+  }
+}
+</style>'''
+assert s.count('</head>')==1
+s=s.replace('</head>',restaurant_photo_css+'</head>',1)
+
+# Identify the exact name-mapping that translates the restaurant's proper name.
+for term in ('City Hall','Restaurant de l’Hôtel de Ville','Hôtel de Ville','function enName','const enName','function enPlace'):
+    start=s.find(term)
+    if start>=0:
+        print("RESTAURANT_NAME_DIAGNOSTIC",term,repr(s[max(0,start-180):start+320]))
+
 # A dedicated blank end cover, still part of the book (not the home cover).
 # It uses the same approved burgundy/gold leather color palette.
 end_page=r'''
