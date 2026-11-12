@@ -85,15 +85,14 @@ s=s.replace(no_star_before,no_star_after,1)
 bib_markup = (
   '<span class="mic-selected-mark mic-bibendum-mark" aria-hidden="true">'
   '<svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">'
-  '<g fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'
-  '<path d="M15 36 C11 33 9 29 10 24 C10 20 11 18 13 16 C14 11 18 7 24 7 C30 7 33 11 35 16 C38 19 39 22 38 26 C38 31 37 34 33 36"/>'
-  '<path d="M13 20 C10 20 10 27 13 29 M35 20 C39 20 39 27 36 29"/>'
-  '<ellipse cx="19" cy="21" rx="4.1" ry="6.2"/>'
-  '<ellipse cx="29" cy="21" rx="4.1" ry="6.2"/>'
-  '<path d="M21 28 Q24 26 27 28"/>'
+  '<g fill="none" stroke="#fff" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round">'
+  '<path d="M15 36 C11 33 9 30 10 25 C10 21 11 18 13 16 C14 12 18 8 21 8 Q22 4 26 6 Q30 7 31 10 C34 12 35 15 35 16 C38 19 39 23 38 27 C38 31 36 34 33 36"/>'
+  '<ellipse cx="19" cy="21.5" rx="4.4" ry="6.6"/>'
+  '<ellipse cx="29" cy="21.5" rx="4.4" ry="6.6"/>'
+  '<path d="M16.5 30 Q23 38 32 29.5"/>'
   '</g>'
-  '<g fill="#fff"><ellipse cx="19.3" cy="21.8" rx="2.45" ry="3.8"/><ellipse cx="28.7" cy="21.8" rx="2.45" ry="3.8"/></g>'
-  '<path d="M27.2 31.8 C27.5 28.6 28.2 25.4 30.4 24.5 C32 24.1 33.2 26.3 32.6 28 C32.1 29.5 30 31 27.2 31.8Z" fill="#fff"/>'
+  '<g fill="#fff"><ellipse cx="19.5" cy="23.4" rx="2.55" ry="3.55"/><ellipse cx="28.5" cy="23.4" rx="2.55" ry="3.55"/></g>'
+  '<path d="M26.8 31.3 Q26.9 26 29.7 24.9 Q32.1 25 32.1 28 Q31.3 31.4 27.7 32.8Z" fill="#fff"/>'
   '</svg></span>'
 )
 assert s.count(no_star_after)==1, "Expected one MICHELIN symbol slot"
