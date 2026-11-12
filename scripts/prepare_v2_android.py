@@ -90,11 +90,11 @@ bib_markup = (
   '<path d="M13 20 C10 20 10 27 13 29 M35 20 C39 20 39 27 36 29"/>'
   '<ellipse cx="19" cy="21" rx="4.1" ry="6.2"/>'
   '<ellipse cx="29" cy="21" rx="4.1" ry="6.2"/>'
-  '<path d="M21 28 Q24 25 27 28"/>'
-  '<path d="M17 31 Q24 38 31 31"/>'
+  '<path d="M21 28 Q24 26 27 28"/>'
+  '<path d="M17 30 Q23 36 32 30"/>'
   '</g>'
   '<g fill="#fff"><ellipse cx="20" cy="22" rx="1.2" ry="1.9"/><ellipse cx="28" cy="22" rx="1.2" ry="1.9"/></g>'
-  '<path d="M23 34 Q24.5 38 26 34Z" fill="#fff"/>'
+  '<path d="M27 30 C28 28 31 28 32 31 C33 34 31 38 28 38 C27 36 26.5 33 27 30Z" fill="#fff"/>'
   '</svg></span>'
 )
 assert s.count(no_star_after)==1, "Expected one MICHELIN symbol slot"
