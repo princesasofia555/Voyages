@@ -351,6 +351,9 @@ plaque_css=r'''<style id="memories-v3-fixed-restaurant-plaques">
 assert s.count('</head>')==1
 s=s.replace('</head>',plaque_css+'</head>',1)
 
+# Inspect all original plaque styles to diagnose conflicting selectors.
+for match in list(re.finditer(r'[^{}]{0,180}\b(?:rest-plaques|rest-plaque|michelin|gm-authentic-logo|rest-visit-date)[^{}]{0,180}\{[^{}]{0,1000}\}',s,re.I))[:65]:
+    print("PLAQUE_CSS_AUDIT:",repr(match.group(0)[:1150]))
 # Correct the original Crissier establishment name when older saved data used English.
 name_helper=r'''
 function memoriesOriginalRestaurantName(x){
