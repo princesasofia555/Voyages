@@ -8,14 +8,14 @@ android {
         applicationId 'com.sofiamagalhaes.voyages'
         minSdk 26
         targetSdk 35
-        versionCode 3
-        versionName '3.0'
+        versionCode 4
+        versionName '3.1'
     }
 
     buildTypes {
         debug {
-            // V3 preview uses a separate package: never overwrites V1 or V2 memories.
-            applicationIdSuffix '.v3test'
+            // Isolated V3 preview 2: cannot overwrite V1, V2, or the existing V3 test package.
+            applicationIdSuffix '.v3preview2'
             versionNameSuffix '-test'
         }
     }
