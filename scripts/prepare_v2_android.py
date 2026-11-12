@@ -337,6 +337,26 @@ color:#ffe4aa!important;font:22px Georgia,serif!important;box-shadow:inset 0 0 0
  <div id="memoriesEndBook" aria-hidden="true"><span class="book-corner tl">❦</span><span class="book-corner tr">❦</span><span class="book-corner bl">❦</span><span class="book-corner br">❦</span></div>
 </section>
 '''
+# Use the exact user-approved back-cover image, stored as an offline WebP Android asset.
+# Unlike the previous CSS imitation, this includes the ornate gold corners,
+# rose, spine and gilded page edges from the approved design.
+end_cover_image_css=r'''
+#endScreen{background:#27020c!important;padding:0!important}
+#endScreen.active{display:flex!important;align-items:center!important;justify-content:center!important}
+#memoriesEndBook{
+ width:min(100vw,62.6dvh)!important;
+ height:min(100dvh,159.85vw)!important;
+ min-height:0!important;
+ max-width:100vw!important;max-height:100dvh!important;
+ border:0!important;border-radius:0!important;
+ box-shadow:none!important;
+ background:#3a0510 url("memories_approved_back_cover.webp") center center / contain no-repeat!important;
+}
+#memoriesEndBook::before,#memoriesEndBook::after,#memoriesEndBook .book-corner{display:none!important}
+'''
+end_page=end_page.replace('</style>',end_cover_image_css+'</style>',1)
+assert 'memories_approved_back_cover.webp' in end_page
+
 anchor='<style id="memoriesBookNavigationStyles">'
 assert s.count(anchor)==1
 s=s.replace(anchor,end_page+anchor,1)
