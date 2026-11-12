@@ -76,8 +76,8 @@ print("SELECTED_BADGE_SOURCE:",s[max(0,caption_pos-500):caption_pos+250])
 
 # Distinguish MICHELIN Selected from Bib Gourmand with no misleading star/flower.
 # Both use the existing red MICHELIN plaque position; actual stars stay unchanged.
-no_star_before = """\${starCount?michelinFlowers(starCount):'<span class="mic-selected-mark">✿</span>'}"""
-no_star_after = """\${starCount?michelinFlowers(starCount):''}"""
+no_star_before = """${starCount?michelinFlowers(starCount):'<span class="mic-selected-mark">✿</span>'}"""
+no_star_after = """${starCount?michelinFlowers(starCount):''}"""
 assert s.count(no_star_before)==1, "Expected Michelin non-star symbol"
 s=s.replace(no_star_before,no_star_after,1)
 
