@@ -81,6 +81,30 @@ no_star_after = """${starCount?michelinFlowers(starCount):''}"""
 assert s.count(no_star_before)==1, "Expected Michelin non-star symbol"
 s=s.replace(no_star_before,no_star_after,1)
 
+# Bib Gourmand: white tongue-out smiling Michelin-man-style face, not a star.
+bib_markup = (
+  '<span class="mic-selected-mark mic-bibendum-mark" aria-hidden="true">'
+  '<svg viewBox="0 0 40 40" width="21" height="21" xmlns="http://www.w3.org/2000/svg">'
+  '<g stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">'
+  '<path d="M13 11 Q8 5 15 5 Q19 1 24 5 Q33 3 32 12 Q37 18 31 23 Q35 29 28 31 Q20 35 12 29 Q5 26 10 21 Q4 16 13 11Z"/>'
+  '<path d="M13 20 Q20 26 28 20 M16 13 L16 15 M25 13 L25 15"/>'
+  '</g><path d="M19 23 Q24 23 23 29 Q20 33 19 27Z" fill="white"/>'
+  '</svg></span>'
+)
+assert s.count(no_star_after)==1, "Expected one MICHELIN symbol slot"
+bib_symbol = """${starCount?michelinFlowers(starCount):/bib\s*gourmand/i.test(mich)?'""" + bib_markup + """':''}"""
+s=s.replace(no_star_after,bib_symbol,1)
+mic_class_before='class="rest-plaque michelin" aria-label='
+mic_class_after='class="rest-plaque michelin ${/bib\s*gourmand/i.test(mich)?"bib-gourmand":""}" aria-label='
+assert s.count(mic_class_before)==1
+s=s.replace(mic_class_before,mic_class_after,1)
+bib_css='''<style id="memories-bib-gourmand-plaque">
+.rest-plaque.michelin.bib-gourmand .mic-caption {display:none!important}
+.rest-plaque.michelin.bib-gourmand .mic-bibendum-mark svg {display:block;width:21px;height:21px}
+</style>'''
+assert s.count('</head>')==1
+s=s.replace('</head>',bib_css+'</head>',1)
+
 # La Fleur de Sel, Cossonay, January 2023: approved Bib Gourmand test case.
 fleur_pattern=r'("name": "La Fleur de Sel"[\s\S]{0,450}?"mich": ")Sélection(")'
 fleur_matches=len(re.findall(fleur_pattern,s))
