@@ -354,6 +354,18 @@ s=s.replace('</head>',plaque_css+'</head>',1)
 # Inspect all original plaque styles to diagnose conflicting selectors.
 for match in list(re.finditer(r'[^{}]{0,180}\b(?:rest-plaques|rest-plaque|michelin|gm-authentic-logo|rest-visit-date)[^{}]{0,180}\{[^{}]{0,1000}\}',s,re.I))[:65]:
     print("PLAQUE_CSS_AUDIT:",repr(match.group(0)[:1150]))
+# The old restaurant stylesheet has several competing !important positions.
+# Pin each restaurant plaque directly in the generated HTML to beat those rules.
+fixed_return_before='return `<span class="rest-plaques">${white}${yellow}${mic}</span>`;'
+fixed_return_after=r"""const pinned=(html,col,align,extra='')=>html.replace('<span class="rest-plaque', `<span style="position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;grid-column:${col}!important;justify-self:${align}!important;align-self:end!important;transform:none!important;margin:0!important;${extra}" class="rest-plaque`);
+ return `<span class="rest-plaques" style="position:absolute!important;display:grid!important;left:calc(32% + 10px)!important;right:33px!important;top:auto!important;bottom:8px!important;height:106px!important;width:auto!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:end!important;overflow:visible!important;pointer-events:none!important;">${pinned(white,1,'start','margin-bottom:29px!important;')}${pinned(yellow,2,'center')}${pinned(mic,3,'end')}</span>`;"""
+assert s.count(fixed_return_before)==1,"Expected one restaurant plaque return"
+s=s.replace(fixed_return_before,fixed_return_after,1)
+rest_date_before='class="rest-visit-date" aria-label="Visit date"'
+rest_date_after='class="rest-visit-date" style="position:absolute!important;left:calc(32% + 12px)!important;bottom:8px!important;right:auto!important;top:auto!important;margin:0!important;z-index:4!important;" aria-label="Visit date"'
+assert s.count(rest_date_before)==1,"Expected one restaurant date"
+s=s.replace(rest_date_before,rest_date_after,1)
+
 # Correct the original Crissier establishment name when older saved data used English.
 name_helper=r'''
 function memoriesOriginalRestaurantName(x){
