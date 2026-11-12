@@ -266,6 +266,10 @@ for term in ('City Hall','Restaurant de l’Hôtel de Ville','Hôtel de Ville','
     if start>=0:
         print("RESTAURANT_NAME_DIAGNOSTIC",term,repr(s[max(0,start-180):start+320]))
 
+# Temporary build diagnostics to locate approved card DOM for precise plaque anchoring.
+for term in ('function restaurantPlaques(x){','class="rowBtn"','class="rest-plaque','class="rest-visit-date"','Restaurant de l’Hôtel de Ville','Hôtel de Ville','City Hall'):
+    start=s.find(term)
+    if start>=0: print("CARD_LAYOUT_DIAGNOSTIC",term,repr(s[max(0,start-400):start+1600]))
 # A dedicated blank end cover, still part of the book (not the home cover).
 # It uses the same approved burgundy/gold leather color palette.
 end_page=r'''
