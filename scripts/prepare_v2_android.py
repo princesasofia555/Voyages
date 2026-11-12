@@ -270,6 +270,10 @@ for term in ('City Hall','Restaurant de l’Hôtel de Ville','Hôtel de Ville','
 for term in ('function restaurantPlaques(x){','class="rowBtn"','class="rest-plaque','class="rest-visit-date"','Restaurant de l’Hôtel de Ville','Hôtel de Ville','City Hall'):
     start=s.find(term)
     if start>=0: print("CARD_LAYOUT_DIAGNOSTIC",term,repr(s[max(0,start-400):start+1600]))
+# Expanded markup diagnostics for approved restaurant badge ordering.
+for term in ('function restaurantPlaques(x){','class="rest-visit-date"','function enPlace(v)','function render(){'):
+    start=s.find(term)
+    if start>=0: print("RESTAURANT_MARKUP_DETAIL",term,repr(s[start:start+4200]))
 # A dedicated blank end cover, still part of the book (not the home cover).
 # It uses the same approved burgundy/gold leather color palette.
 end_page=r'''
