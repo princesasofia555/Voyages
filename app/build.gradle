@@ -8,14 +8,14 @@ android {
         applicationId 'com.sofiamagalhaes.voyages'
         minSdk 26
         targetSdk 35
-        versionCode 1
-        versionName '1.0'
+        versionCode 3
+        versionName '3.0'
     }
 
     buildTypes {
         debug {
-            // V2 tests install beside existing Memories, with separate storage.
-            applicationIdSuffix '.v2test'
+            // V3 preview uses a separate package: never overwrites V1 or V2 memories.
+            applicationIdSuffix '.v3test'
             versionNameSuffix '-test'
         }
     }
