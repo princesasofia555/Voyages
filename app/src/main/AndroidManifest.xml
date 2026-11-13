@@ -1,21 +1,10 @@
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <application
-        android:label="Memories · Voyages"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar"
-        android:usesCleartextTraffic="true">
-
-        <activity
-            android:name="com.voyages.memories.MainActivity"
-            android:exported="true">
-
+    <application android:label="Memories" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:usesCleartextTraffic="true" android:allowBackup="true">
+        <activity android:name="com.sofiamagalhaes.voyages.MainActivity" android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
     </application>
-
 </manifest>
