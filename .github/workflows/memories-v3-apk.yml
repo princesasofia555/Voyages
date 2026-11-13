@@ -30,6 +30,10 @@ jobs:
         run: |
           test -s app/src/main/assets/Memories_V3_Bordeaux_Harmonise_TEST-2.html
           cp app/src/main/assets/Memories_V3_Bordeaux_Harmonise_TEST-2.html app/src/main/assets/index.html
+      - name: Generate Memories cover launcher icon
+        run: |
+          python -m pip install --quiet Pillow
+          python scripts/create_memories_icon.py
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
