@@ -1,8 +1,6 @@
 name: Build Memories V3 APK
 on:
   workflow_dispatch:
-  push:
-    branches: [memories-v3-apk]
 jobs:
   apk:
     runs-on: ubuntu-latest
