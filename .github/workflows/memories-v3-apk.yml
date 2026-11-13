@@ -30,6 +30,8 @@ jobs:
         run: |
           test -s app/src/main/assets/Memories_V3_Bordeaux_Harmonise_TEST-2.html
           cp app/src/main/assets/Memories_V3_Bordeaux_Harmonise_TEST-2.html app/src/main/assets/index.html
+      - name: Restore missing experiences from backup
+        run: python scripts/restore_experiences.py
       - name: Restore approved Michelin Bibendum
         run: python scripts/restore_bibendum.py
       - name: Generate Memories cover launcher icon
