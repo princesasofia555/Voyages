@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application android:label="Memories V3 Test" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:usesCleartextTraffic="true" android:allowBackup="true">
+    <application android:icon="@drawable/memories_launcher" android:roundIcon="@drawable/memories_launcher" android:label="Memories V3 Test" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:usesCleartextTraffic="true" android:allowBackup="true">
         <activity android:name="com.sofiamagalhaes.voyages.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
