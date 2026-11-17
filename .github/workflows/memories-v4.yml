@@ -33,7 +33,7 @@ jobs:
         run: |
           python -m pip install --quiet Pillow
           python scripts/create_memories_icon.py
-      - name: Build V4 test APK
+      - name: Add two photo collage pages\n        run: python scripts/add_v4_photo_pages.py\n      - name: Build V4 test APK
         run: gradle assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
