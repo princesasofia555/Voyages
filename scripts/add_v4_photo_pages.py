@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""Add two independent photo collage pages without changing the approved design."""
+from pathlib import Path
+import re
+
+path = Path("app/src/main/assets/index.html")
+html = path.read_text(encoding="utf-8")
+start = html.index('<section id="collageScreen"')
+end = html.index('</section>', start) + len('</section>')
+original = html[start:end]
+assert 'id="freeCollageFrame"' in original
+assert 'MemoriesV3FreeCollage' in original
+assert "const pages=['collage','list','hotels','map','end'];" in html
+assert "if(page==='collage')" in html
+
+new_pages = []
+for number in (2, 3):
+    clone = original.replace('id="collageScreen"', f'id="collage{number}Screen"')
+    clone = clone.replace('id="freeCollageFrame"', f'id="freeCollageFrame{number}"')
+    clone = clone.replace('MemoriesV3FreeCollage', f'MemoriesV4FreeCollage{number}')
+    clone = clone.replace('Free photo collage', f'Free photo collage page {number}')
+    new_pages.append(clone)
+html = html[:end] + ''.join(new_pages) + html[end:]
+html = html.replace(
+    "const pages=['collage','list','hotels','map','end'];",
+    "const pages=['collage','collage2','collage3','list','hotels','map','end'];",
+    1
+)
+html = html.replace(
+    "if(page==='collage'){document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));document.getElementById('collageScreen').classList.add('active');sync();window.scrollTo(0,0);return;}",
+    "if(page==='collage'||page==='collage2'||page==='collage3'){document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));document.getElementById(page+'Screen').classList.add('active');sync();window.scrollTo(0,0);return;}",
+    1
+)
+html = html.replace(
+    "document.getElementById('endScreen').classList.remove('active');document.getElementById('collageScreen').classList.remove('active');",
+    "document.getElementById('endScreen').classList.remove('active');['collage','collage2','collage3'].forEach(p=>document.getElementById(p+'Screen').classList.remove('active'));",
+    1
+)
+html = html.replace(
+    "#globeScreen,#collageScreen,#listScreen,#hotelScreen,#mapScreen,#endScreen",
+    "#globeScreen,#collageScreen,#collage2Screen,#collage3Screen,#listScreen,#hotelScreen,#mapScreen,#endScreen",
+    1
+)
+# Preserve full-page appearance on new collage screens.
+html += """\n<style id="memories-v4-extra-collage-pages">
+#collage2Screen,#collage3Screen{padding:0!important;margin:0!important}
+#collage2Screen iframe,#collage3Screen iframe{display:block;width:100%;height:100dvh;border:0}
+</style>\n"""
+assert html.count('id="collage2Screen"') == 1
+assert html.count('id="collage3Screen"') == 1
+assert 'MemoriesV4FreeCollage2' in html and 'MemoriesV4FreeCollage3' in html
+path.write_text(html, encoding="utf-8")
+print("V4: 3 photo collage pages with independent IndexedDB storage.")
