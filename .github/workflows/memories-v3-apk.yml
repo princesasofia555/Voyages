@@ -1,8 +1,14 @@
 name: Build Memories V3 APK
 on:
   workflow_dispatch:
-  push:
-    branches: [memories-v3-apk]
+    inputs:
+      installed_application_id:
+        description: 'Verified application ID of the installed Memories app (do not guess)'
+        required: true
+        type: choice
+        options:
+          - com.sofiamagalhaes.voyages
+          - com.sofiamagalhaes.memories.v3test
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -57,6 +63,7 @@ jobs:
           test -s "$RUNNER_TEMP/memories-signing.jks"
       - name: Build signed release APK
         env:
+          MEMORIES_APPLICATION_ID: ${{ inputs.installed_application_id }}
           MEMORIES_SIGNING_STORE_FILE: ${{ runner.temp }}/memories-signing.jks
           MEMORIES_SIGNING_STORE_PASSWORD: ${{ secrets.MEMORIES_KEYSTORE_PASSWORD }}
           MEMORIES_SIGNING_KEY_ALIAS: ${{ secrets.MEMORIES_KEY_ALIAS }}

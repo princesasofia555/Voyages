@@ -4,8 +4,15 @@ android {
     namespace 'com.sofiamagalhaes.voyages'
     compileSdk 35
 
+    // Android updates require the exact applicationId of the installed APK.
+    // Never silently choose between the two historical IDs.
+    def updateApplicationId = System.getenv('MEMORIES_APPLICATION_ID')
+    if (!(updateApplicationId in ['com.sofiamagalhaes.voyages', 'com.sofiamagalhaes.memories.v3test'])) {
+        throw new GradleException('Set MEMORIES_APPLICATION_ID to the verified installed application ID before building.')
+    }
+
     defaultConfig {
-        applicationId 'com.sofiamagalhaes.memories.v3test'
+        applicationId updateApplicationId
         minSdk 26
         targetSdk 35
         versionCode 4
