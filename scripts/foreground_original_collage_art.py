@@ -44,9 +44,9 @@ old="""#page::before,#page::after{
 #page::after{left:0;bottom:0;width:100%;height:24%;background-position:left bottom}"""
 # The original escaped srcdoc is duplicated for all three pages.
 # Match each CSS rule individually to tolerate whitespace and escaped HTML.
-pattern=r'#page::before,#page::after\\s*\\{[^}]*\\}\\s*#page::before\\s*\\{[^}]*\\}\\s*#page::after\\s*\\{[^}]*\\}'
+pattern=r'#page::before,#page::after\\{[\\s\\S]*?#page::after\\{[^}]*\\}'
 matches=list(re.finditer(pattern,s))
-assert len(matches)==3, f'Expected three original decoration strips, found {len(matches)}'
+assert len(matches)==3, f'Expected three decoration strips, found {len(matches)}; markers={s.count(chr(35)+"page::before,#page::after")}; sample={s[s.find(chr(35)+"page::before,#page::after"):s.find(chr(35)+"page::before,#page::after")+280]!r}'
 new="#page::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:9000;background:url('"+overlay+"') center/100% 100% no-repeat}#page::after{content:none}"
 s=re.sub(pattern,lambda _:new,s)
 assert s.count('z-index:9000;background:url(')==3
