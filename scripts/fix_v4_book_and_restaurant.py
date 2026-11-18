@@ -87,5 +87,19 @@ old_name_render = "esc(memoriesOriginalRestaurantName(x))"
 assert s.count(old_name_render) == 1, ('Forced restaurant name renderer', s.count(old_name_render))
 s = s.replace(old_name_render, "esc(x.name)", 1)
 assert "esc(memoriesOriginalRestaurantName(x))" not in s
+# All-card audit: show the saved name, not a hard-coded alias for Crissier.
+forced_name = 'esc(memoriesOriginalRestaurantName(x))'
+assert s.count(forced_name) == 1, ('Forced name renderer count', s.count(forced_name))
+s=s.replace(forced_name,'esc(x.name)',1)
+# All-card audit: do not silently claim a failed localStorage write succeeded.
+old_persist = "const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){alert('Unable to save: insufficient storage. Back up your data and use smaller photos.')}if($('count'))$('count').textContent=items.length;};"
+new_persist = "const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(items));if($('count'))$('count').textContent=items.length;return true}catch(e){alert('Unable to save: insufficient storage. Back up your data and use smaller photos.');return false}};"
+assert s.count(old_persist)==1, 'Persist function not found'
+s=s.replace(old_persist,new_persist,1)
+# Do not close the edit form or display a success toast when storage fails.
+old_submit = "items.push(obj);}persist();renderFlatMap();$('modal').classList.add('hidden');render();toast(old?'Experience updated':'Experience added')"
+new_submit = "items.push(obj);}if(!persist())return;renderFlatMap();$('modal').classList.add('hidden');render();toast(old?'Experience updated':'Experience added')"
+assert s.count(old_submit)==1, 'Restaurant submit handler not found'
+s=s.replace(old_submit,new_submit,1)
 p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
