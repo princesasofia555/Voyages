@@ -41,6 +41,37 @@ html = html.replace(
     "#globeScreen,#collageScreen,#collage2Screen,#collage3Screen,#listScreen,#hotelScreen,#mapScreen,#endScreen",
     1
 )
+# The collage is an iframe: it captures touches, so parent document navigation
+# cannot receive taps on the page. Add explicit accessible turn controls above it.
+for page in ("collage", "collage2", "collage3"):
+    marker = f'<section id="{page}Screen"'
+    start = html.index(marker)
+    end = html.index('</section>', start)
+    controls = (
+        '<div class="v4-photo-page-turns">'
+        '<button type="button" class="v4-photo-prev" aria-label="Previous page">‹</button>'
+        '<button type="button" class="v4-photo-next" aria-label="Next page">›</button>'
+        '</div>'
+    )
+    html = html[:end] + controls + html[end:]
+# Bind overlay controls to the already-existing book navigation.
+overlay_script = """<script id="v4-photo-navigation">
+document.addEventListener('click',function(e){
+  const prev=e.target.closest('.v4-photo-prev');
+  const next=e.target.closest('.v4-photo-next');
+  if(!prev&&!next)return;
+  e.preventDefault();e.stopPropagation();
+  document.getElementById(prev?'memBookPrev':'memBookNext').click();
+},true);
+</script>
+<style id="v4-photo-navigation-style">
+#collageScreen,#collage2Screen,#collage3Screen{position:relative!important}
+.v4-photo-page-turns{position:absolute;z-index:100;inset:0;pointer-events:none}
+.v4-photo-page-turns button{pointer-events:auto;position:absolute;top:48%;width:42px;height:76px;
+ border:0;border-radius:9px;background:#431327a8;color:#ffe7a0;font-size:35px}
+.v4-photo-prev{left:0}.v4-photo-next{right:0}
+</style>"""
+html = html.replace('</body>', overlay_script+'</body>', 1)
 # Preserve full-page appearance on new collage screens.
 html += """\n<style id="memories-v4-extra-collage-pages">
 #collage2Screen,#collage3Screen{padding:0!important;margin:0!important}
