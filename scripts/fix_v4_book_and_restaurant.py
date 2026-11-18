@@ -32,5 +32,11 @@ body.mem-book-mode #endScreen.active #memoriesEndBook::after,
 body.mem-book-mode #endScreen.active #memoriesEndBook .book-corner{display:none!important}
 </style>\n"""
 assert 'memories-v4-back-cover-fullscreen' in s
+# Final pass: toolbar in all three embedded photo pages must avoid the star.
+old_toolbar = '.toolbar{position:absolute;top:3.2%;right:5%;'
+new_toolbar = '.toolbar{position:absolute;top:3.2%;right:17%;'
+assert s.count(old_toolbar)==3, ('Unexpected photo toolbar count',s.count(old_toolbar))
+s=s.replace(old_toolbar,new_toolbar)
+assert s.count(new_toolbar)==3 and s.count(old_toolbar)==0
 p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
