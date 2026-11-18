@@ -13,6 +13,21 @@ assert 'MemoriesV3FreeCollage' in original
 assert "const pages=['collage','list','hotels','map','end'];" in html
 assert "if(page==='collage')" in html
 
+# Keep the approved artwork in front of movable photographs on all three pages.
+# The iframe contains HTML-escaped CSS. Reuse its own background artwork:
+# no replacement drawing or image, and no change to stored photo coordinates.
+foreground_css = """
+#page::before,#page::after{
+ content:'';position:absolute;pointer-events:none;z-index:9000;
+ background-image:inherit;background-repeat:no-repeat;
+ background-size:100vw 100dvh;
+}
+#page::before{left:0;top:0;width:55%;height:26%;background-position:left top}
+#page::after{left:0;bottom:0;width:100%;height:27%;background-position:left bottom}
+"""
+assert original.count('&lt;/style&gt;') == 1, 'Collage iframe style marker missing'
+original=original.replace('&lt;/style&gt;',foreground_css+'&lt;/style&gt;',1)
+assert original.count('#page::before')==1
 new_pages = []
 for number in (2, 3):
     clone = original.replace('id="collageScreen"', f'id="collage{number}Screen"')
