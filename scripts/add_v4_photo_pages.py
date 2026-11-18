@@ -65,7 +65,7 @@ document.addEventListener('click',function(e){
 },true);
 </script>
 <style id="v4-photo-navigation-style">
-#collageScreen,#collage2Screen,#collage3Screen{position:relative!important}
+#collageScreen,#collage2Screen,#collage3Screen{position:relative!important}\n/* Hide original arrows only on photo pages; keep the new overlay arrows. */\nbody:has(#collageScreen.active) #memBookArrows,\nbody:has(#collage2Screen.active) #memBookArrows,\nbody:has(#collage3Screen.active) #memBookArrows{opacity:0!important;pointer-events:none!important}
 .v4-photo-page-turns{position:absolute;z-index:100;inset:0;pointer-events:none}
 .v4-photo-page-turns button{pointer-events:auto;position:absolute;top:48%;width:42px;height:76px;
  border:0;border-radius:9px;background:#431327a8;color:#ffe7a0;font-size:35px}
