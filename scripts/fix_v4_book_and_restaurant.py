@@ -81,5 +81,11 @@ body:has(#collage3Screen.active) #memBookMenu{display:none!important;pointer-eve
 """
 assert 'const find=id=>items.find(x=>String(x._uid)===String(id));' in s
 assert 'memories-v4-hide-extra-photo-tools' in s
+# Critical: V3 forced the Crissier restaurant name during every render,
+# overriding user edits even when the new name was correctly saved.
+old_name_render = "esc(memoriesOriginalRestaurantName(x))"
+assert s.count(old_name_render) == 1, ('Forced restaurant name renderer', s.count(old_name_render))
+s = s.replace(old_name_render, "esc(x.name)", 1)
+assert "esc(memoriesOriginalRestaurantName(x))" not in s
 p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
