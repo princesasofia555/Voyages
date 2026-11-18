@@ -41,6 +41,8 @@ jobs:
         run: python scripts/restore_v4_original_photos.py
       - name: Fix book navigation, restaurant edits and back cover
         run: python scripts/fix_v4_book_and_restaurant.py
+      - name: Add photo zoom and framing for all cards
+        run: python scripts/add_v4_card_photo_crop.py
       - name: Build V4 test APK
         run: gradle assembleDebug --no-daemon
       - name: Verify actual APK contains all requested fixes
@@ -52,6 +54,7 @@ jobs:
               html=z.read('assets/index.html').decode('utf-8')
           checks={
             'backup bridge':'window.MemoriesAndroid.save(' in html,
+            'card photo crop zoom':'function memoriesCropPhoto(img)' in html and 'memCropZoom' in html,
             'three repositioned photo toolbars':html.count('.toolbar{position:absolute;top:3.2%;right:17%;')==3,
             'full-screen back cover':'memories-v4-back-cover-fullscreen' in html,
             'restaurant save correction':'if(!persist())return;renderFlatMap();' in html,
