@@ -42,9 +42,13 @@ old="""#page::before,#page::after{
 }
 #page::before{left:0;top:0;width:100%;height:18%;background-position:left top}
 #page::after{left:0;bottom:0;width:100%;height:24%;background-position:left bottom}"""
-assert s.count(old)==1, 'Expected one shared collage template before page cloning'
+# The original escaped srcdoc is duplicated for all three pages.
+# Match each CSS rule individually to tolerate whitespace and escaped HTML.
+pattern=r'#page::before,#page::after\\s*\\{[^}]*\\}\\s*#page::before\\s*\\{[^}]*\\}\\s*#page::after\\s*\\{[^}]*\\}'
+matches=list(re.finditer(pattern,s))
+assert len(matches)==3, f'Expected three original decoration strips, found {len(matches)}'
 new="#page::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:9000;background:url('"+overlay+"') center/100% 100% no-repeat}#page::after{content:none}"
-s=s.replace(old,new)
-assert s.count('z-index:9000;background:url(')==1
+s=re.sub(pattern,lambda _:new,s)
+assert s.count('z-index:9000;background:url(')==3
 p.write_text(s,encoding='utf-8')
 print('Original ornament overlay preserved for all three collage pages',w,h)
