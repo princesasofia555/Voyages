@@ -35,6 +35,8 @@ jobs:
           python scripts/create_memories_icon.py
       - name: Add two photo collage pages
         run: python scripts/add_v4_photo_pages.py
+      - name: Include newly reported restaurant visit
+        run: python scripts/add_v4_new_visits.py
       - name: Build V4 test APK
         run: gradle assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
