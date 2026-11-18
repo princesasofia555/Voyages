@@ -43,6 +43,8 @@ jobs:
         run: python scripts/fix_v4_book_and_restaurant.py
       - name: Add photo zoom and framing for all cards
         run: python scripts/add_v4_card_photo_crop.py
+      - name: Enable direct photo editing in card lists
+        run: python scripts/add_v4_direct_card_photo_edit.py
       - name: Build V4 test APK
         run: gradle assembleDebug --no-daemon
       - name: Verify actual APK contains all requested fixes
@@ -55,6 +57,7 @@ jobs:
           checks={
             'backup bridge':'window.MemoriesAndroid.save(' in html,
             'card photo crop zoom':'function memoriesCropPhoto(img)' in html and 'memCropZoom' in html,
+            'direct card photo editing':'memories-card-photo-direct-edit' in html and 'event.stopImmediatePropagation()' in html,
             'three repositioned photo toolbars':html.count('.toolbar{position:absolute;top:3.2%;right:17%;')==3,
             'full-screen back cover':'memories-v4-back-cover-fullscreen' in html,
             'restaurant save correction':'if(!persist())return;renderFlatMap();' in html,
