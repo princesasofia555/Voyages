@@ -61,6 +61,10 @@ old_load = "for(const memory of BASE){"
 new_load = """const usedMemoryIds=new Set();items.forEach((x,k)=>{let uid=String(x._uid||'');if(!uid||usedMemoryIds.has(uid)){uid='memories-row-'+k+'-'+Date.now();x._uid=uid;}usedMemoryIds.add(uid)});try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){};for(const memory of BASE){"""
 assert s.count(old_load)==1
 s=s.replace(old_load,new_load,1)
+# BASE entries appended during merge also need unique IDs.
+anchor="const persist=()=>"
+assert s.count(anchor)==1
+s=s.replace(anchor,"""{const seen=new Set();items.forEach((x,k)=>{let id=String(x._uid||'');if(!id||seen.has(id)){id='memories-final-'+k+'-'+Date.now();x._uid=id;}seen.add(id)});try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}};"""+anchor,1)
 assert s.count("x.i||x._n")>=2
 s=s.replace("x.i||x._n","x._uid")
 s=s.replace("const find=id=>items.find(x=>String(x.i||x._uid)===String(id));","const find=id=>items.find(x=>String(x._uid)===String(id));")
