@@ -54,7 +54,7 @@ jobs:
             'backup bridge':'window.MemoriesAndroid.save(' in html,
             'three repositioned photo toolbars':html.count('.toolbar{position:absolute;top:3.2%;right:17%;')==3,
             'full-screen back cover':'memories-v4-back-cover-fullscreen' in html,
-            'restaurant save correction':'else {obj.i=Math.max(0,...items.map(x=>Number(x.i)||0))+1;items.push(obj);}persist();' in html,
+            'restaurant save correction':'if(!persist())return;renderFlatMap();' in html,
             'new Neusa visit':'16.11.2026' in html,
             'three photo pages':'collage3Screen' in html,
             'unique restaurant editing IDs':'const find=id=>items.find(x=>String(x._uid)===String(id));' in html,
