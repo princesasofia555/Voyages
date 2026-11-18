@@ -11,7 +11,7 @@ end=s.index('</section>',start)
 part=html.unescape(s[start:end])
 m=re.search(r'#page\\{[^}]*background:url\\([\\x27\\x22]?(data:image/png;base64,[A-Za-z0-9+/=]+)',part)
 assert m, 'Original approved collage artwork not found'
-raw=base64.b64decode(m.group(1).split(',')[1])
+raw=base64.b64decode(m.group(1))
 im=Image.open(BytesIO(raw)).convert('RGBA')
 w,h=im.size
 pix=im.load()
