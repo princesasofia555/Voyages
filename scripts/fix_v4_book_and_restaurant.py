@@ -38,5 +38,5 @@ new_toolbar = '.toolbar{position:absolute;top:3.2%;right:17%;'
 assert s.count(old_toolbar)==3, ('Unexpected photo toolbar count',s.count(old_toolbar))
 s=s.replace(old_toolbar,new_toolbar)
 assert s.count(new_toolbar)==3 and s.count(old_toolbar)==0
-p.write_text(s,encoding="utf-8")
+# Backup must call the Java bridge that is ACTUALLY registered in MainActivity:\n# MemoriesAndroid.save(filename, base64), not nonexistent VoyagesAndroid.saveBackup.\nold_backup = "if(window.VoyagesAndroid&&typeof window.VoyagesAndroid.saveBackup==='function'){    window.VoyagesAndroid.saveBackup(json);"\nnew_backup = """if(window.MemoriesAndroid&&typeof window.MemoriesAndroid.save==='function'){\n    const reader=new FileReader();\n    reader.onloadend=()=>{\n      const encoded=String(reader.result||'').split(',')[1]||'';\n      if(encoded)window.MemoriesAndroid.save('memories-backup-'+new Date().toISOString().slice(0,10)+'.json',encoded);\n      else alert('Backup could not be encoded');\n    };\n    reader.readAsDataURL(new Blob([json],{type:'application/json;charset=utf-8'}));"""\nassert s.count(old_backup)==1, 'Backup handler not found'\ns=s.replace(old_backup,new_backup,1)\nassert 'window.MemoriesAndroid.save(' in s\np.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
