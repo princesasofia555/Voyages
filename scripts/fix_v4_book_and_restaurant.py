@@ -112,5 +112,26 @@ old_restored="const existing=items.find(x=>x.name===restored.name&&x.date===rest
 new_restored="const existing=items.find(x=>(x.i===restored.i&&x.date===restored.date)||(x.name===restored.name&&x.date===restored.date));"
 assert s.count(old_restored)==1,('Photo restore',s.count(old_restored))
 s=s.replace(old_restored,new_restored,1)
+# Hotel audit: stable note keys (with backwards-compatible fallback) and no duplicate custom stays.
+old_hotel_key="function hotelNoteKey(h){return 'voyages_hotel_note_'+encodeURIComponent(h.n+'|'+h.city+'|'+h.date)}"
+new_hotel_key="""HOTELS.forEach((h,i)=>{if(!h._uid)h._uid='hotel-'+i+'-'+encodeURIComponent(h.date)});
+function hotelLegacyNoteKey(h){return 'voyages_hotel_note_'+encodeURIComponent(h.n+'|'+h.city+'|'+h.date)}
+function hotelNoteKey(h){return 'voyages_hotel_note_uid_'+encodeURIComponent(h._uid)}"""
+assert s.count(old_hotel_key)==1,('Hotel note key',s.count(old_hotel_key))
+s=s.replace(old_hotel_key,new_hotel_key,1)
+old_hotel_note="localStorage.getItem(hotelNoteKey(x))||''"
+assert s.count(old_hotel_note)==1
+s=s.replace(old_hotel_note,"localStorage.getItem(hotelNoteKey(x))||localStorage.getItem(hotelLegacyNoteKey(x))||''",1)
+old_hotel_add="JSON.stringify(HOTELS.filter(x=>x._custom).concat([{...stay,_custom:true}]))"
+assert s.count(old_hotel_add)==1,('Duplicate hotel insert',s.count(old_hotel_add))
+s=s.replace(old_hotel_add,"JSON.stringify(HOTELS.filter(x=>x._custom).concat([{...stay,_custom:true,_uid:'hotel-custom-'+Date.now()}]))",1)
+# Assign the same stable identifier to the in-memory new stay before persistence.
+s=s.replace("};HOTELS.push(stay);\ntry{localStorage.setItem('voyages_custom_hotels_v1'","};stay._custom=true;stay._uid='hotel-custom-'+Date.now();HOTELS.push(stay);\ntry{localStorage.setItem('voyages_custom_hotels_v1'",1)
+s=s.replace("JSON.stringify(HOTELS.filter(x=>x._custom).concat([{...stay,_custom:true,_uid:'hotel-custom-'+Date.now()}]))","JSON.stringify(HOTELS.filter(x=>x._custom))",1)
+# Photos keyed by hotel stable ID, with old index as migration fallback.
+old_photo="localStorage.getItem('voyages_hotel_photo_'+i)||localStorage.getItem('voyages_hotel_shared_'+h.n.replace(/ Château$/,'').toLowerCase())"
+new_photo="localStorage.getItem('voyages_hotel_photo_uid_'+encodeURIComponent(h._uid))||localStorage.getItem('voyages_hotel_photo_'+i)||localStorage.getItem('voyages_hotel_shared_'+h.n.replace(/ Château$/,'').toLowerCase())"
+assert s.count(old_photo)==1,('Hotel photo reader',s.count(old_photo))
+s=s.replace(old_photo,new_photo,1)
 p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
