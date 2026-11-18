@@ -89,8 +89,8 @@ s = s.replace(old_name_render, "esc(x.name)", 1)
 assert "esc(memoriesOriginalRestaurantName(x))" not in s
 # All-card audit: show the saved name, not a hard-coded alias for Crissier.
 forced_name = 'esc(memoriesOriginalRestaurantName(x))'
-assert s.count(forced_name) == 1, ('Forced name renderer count', s.count(forced_name))
-s=s.replace(forced_name,'esc(x.name)',1)
+assert s.count(forced_name) in (0,1), ('Forced name renderer count', s.count(forced_name))
+s=s.replace(forced_name,'esc(x.name)')
 # All-card audit: do not silently claim a failed localStorage write succeeded.
 old_persist = "const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){alert('Unable to save: insufficient storage. Back up your data and use smaller photos.')}if($('count'))$('count').textContent=items.length;};"
 new_persist = "const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(items));if($('count'))$('count').textContent=items.length;return true}catch(e){alert('Unable to save: insufficient storage. Back up your data and use smaller photos.');return false}};"
