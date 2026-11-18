@@ -35,6 +35,8 @@ jobs:
           python scripts/create_memories_icon.py
       - name: Add two photo collage pages
         run: python scripts/add_v4_photo_pages.py
+      - name: Place approved decorations above free photos
+        run: python scripts/foreground_original_collage_art.py
       - name: Include newly reported restaurant visit
         run: python scripts/add_v4_new_visits.py
       - name: Restore original restaurant photos
@@ -58,7 +60,7 @@ jobs:
             'backup bridge':'window.MemoriesAndroid.save(' in html,
             'card photo crop zoom':'function memoriesCropPhoto(img)' in html and 'memCropZoom' in html,
             'direct card photo editing':'memories-card-photo-direct-edit' in html and 'event.stopImmediatePropagation()' in html,
-            'straight collage edges':'clip-path:polygon(' not in html and 'height:18%;background-position:left top' in html and 'height:24%;background-position:left bottom' in html,
+            'original foreground decorations':'clip-path:polygon(' not in html and html.count('z-index:9000;background:url(')==3,
             'three repositioned photo toolbars':html.count('.toolbar{position:absolute;top:3.2%;right:17%;')==3,
             'full-screen back cover':'memories-v4-back-cover-fullscreen' in html,
             'restaurant save correction':'if(!persist())return;renderFlatMap();' in html,
