@@ -40,5 +40,19 @@ s=s.replace(old_toolbar,new_toolbar)
 assert s.count(new_toolbar)==3 and s.count(old_toolbar)==0
 # Mark the actual HTML for inspection; assert the marker is packaged in the APK.
 s += '\\n<!-- memories-v4-verified-toolbar-and-backup -->\\n'
-# Backup must call the Java bridge that is ACTUALLY registered in MainActivity:\n# MemoriesAndroid.save(filename, base64), not nonexistent VoyagesAndroid.saveBackup.\nold_backup = "if(window.VoyagesAndroid&&typeof window.VoyagesAndroid.saveBackup==='function'){    window.VoyagesAndroid.saveBackup(json);"\nnew_backup = """if(window.MemoriesAndroid&&typeof window.MemoriesAndroid.save==='function'){\n    const reader=new FileReader();\n    reader.onloadend=()=>{\n      const encoded=String(reader.result||'').split(',')[1]||'';\n      if(encoded)window.MemoriesAndroid.save('memories-backup-'+new Date().toISOString().slice(0,10)+'.json',encoded);\n      else alert('Backup could not be encoded');\n    };\n    reader.readAsDataURL(new Blob([json],{type:'application/json;charset=utf-8'}));"""\nassert s.count(old_backup)==1, 'Backup handler not found'\ns=s.replace(old_backup,new_backup,1)\nassert 'window.MemoriesAndroid.save(' in s\np.write_text(s,encoding="utf-8")
+# Backup must call the Java bridge that is ACTUALLY registered in MainActivity:
+# MemoriesAndroid.save(filename, base64), not nonexistent VoyagesAndroid.saveBackup.
+old_backup = "if(window.VoyagesAndroid&&typeof window.VoyagesAndroid.saveBackup==='function'){    window.VoyagesAndroid.saveBackup(json);"
+new_backup = """if(window.MemoriesAndroid&&typeof window.MemoriesAndroid.save==='function'){
+    const reader=new FileReader();
+    reader.onloadend=()=>{
+      const encoded=String(reader.result||'').split(',')[1]||'';
+      if(encoded)window.MemoriesAndroid.save('memories-backup-'+new Date().toISOString().slice(0,10)+'.json',encoded);
+      else alert('Backup could not be encoded');
+    };
+    reader.readAsDataURL(new Blob([json],{type:'application/json;charset=utf-8'}));"""
+assert s.count(old_backup)==1, 'Backup handler not found'
+s=s.replace(old_backup,new_backup,1)
+assert 'window.MemoriesAndroid.save(' in s
+p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
