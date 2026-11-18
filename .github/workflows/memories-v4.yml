@@ -57,6 +57,8 @@ jobs:
             'restaurant save correction':'else {obj.i=Math.max(0,...items.map(x=>Number(x.i)||0))+1;items.push(obj);}persist();' in html,
             'new Neusa visit':'16.11.2026' in html,
             'three photo pages':'collage3Screen' in html,
+            'unique restaurant editing IDs':'const find=id=>items.find(x=>String(x._uid)===String(id));' in html,
+            'hide extra photo menus':'memories-v4-hide-extra-photo-tools' in html,
           }
           for k,v in checks.items(): print(k, 'PASS' if v else 'FAIL')
           assert all(checks.values()),'APK failed double verification'
