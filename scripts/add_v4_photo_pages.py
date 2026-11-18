@@ -27,7 +27,7 @@ foreground_css = """
 """
 assert original.count('&lt;/style&gt;') == 1, 'Collage iframe style marker missing'
 original=original.replace('&lt;/style&gt;',foreground_css+'&lt;/style&gt;',1)
-assert original.count('#page::before')==1
+assert original.count('#page::before')==2
 new_pages = []
 for number in (2, 3):
     clone = original.replace('id="collageScreen"', f'id="collage{number}Screen"')
