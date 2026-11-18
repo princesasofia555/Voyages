@@ -22,8 +22,8 @@ foreground_css = """
  background-image:inherit;background-repeat:no-repeat;
  background-size:100vw 100dvh;
 }
-#page::before{left:0;top:0;width:55%;height:26%;background-position:left top;clip-path:polygon(0 0,100% 0,100% 20%,83% 25%,65% 36%,52% 44%,38% 62%,25% 95%,0 100%)}
-#page::after{left:0;bottom:0;width:100%;height:35%;background-position:left bottom;clip-path:polygon(0 100%,100% 100%,100% 0,90% 0,81% 18%,73% 7%,58% 5%,47% 19%,36% 35%,25% 47%,15% 68%,0 64%)}
+#page::before{left:0;top:0;width:100%;height:18%;background-position:left top}
+#page::after{left:0;bottom:0;width:100%;height:24%;background-position:left bottom}
 """
 assert original.count('&lt;/style&gt;') == 1, 'Collage iframe style marker missing'
 original=original.replace('&lt;/style&gt;',foreground_css+'&lt;/style&gt;',1)
