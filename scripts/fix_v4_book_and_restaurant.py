@@ -55,5 +55,27 @@ new_backup = """if(window.MemoriesAndroid&&typeof window.MemoriesAndroid.save===
 s, backup_count = re.subn(backup_pattern, lambda _: new_backup, s)
 assert backup_count == 1, ('Backup handler match count', backup_count)
 assert 'window.MemoriesAndroid.save(' in s
+# Give every restaurant a unique stable key, including entries sharing old numeric IDs.
+# The visible list number is a display position, never an edit identifier.
+old_load = "for(const memory of BASE){"
+new_load = """const usedMemoryIds=new Set();items.forEach((x,k)=>{let uid=String(x._uid||'');if(!uid||usedMemoryIds.has(uid)){uid='memories-row-'+k+'-'+Date.now();x._uid=uid;}usedMemoryIds.add(uid)});try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){};for(const memory of BASE){"""
+assert s.count(old_load)==1
+s=s.replace(old_load,new_load,1)
+assert s.count("x.i||x._n")>=2
+s=s.replace("x.i||x._n","x._uid")
+s=s.replace("const find=id=>items.find(x=>String(x.i||x._uid)===String(id));","const find=id=>items.find(x=>String(x._uid)===String(id));")
+s=s.replace("editId=x?String(x.i||x._uid):null;","editId=x?String(x._uid):null;")
+s=s.replace("String(y.i||y._uid)!==String(id)","String(y._uid)!==String(id)")
+# The top-right star opens the Add Experience menu: retain it on the first page only.
+s += """
+<style id="memories-v4-hide-extra-photo-tools">
+body:has(#collage2Screen.active) #memBookTools,
+body:has(#collage3Screen.active) #memBookTools,
+body:has(#collage2Screen.active) #memBookMenu,
+body:has(#collage3Screen.active) #memBookMenu{display:none!important;pointer-events:none!important}
+</style>
+"""
+assert 'const find=id=>items.find(x=>String(x._uid)===String(id));' in s
+assert 'memories-v4-hide-extra-photo-tools' in s
 p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
