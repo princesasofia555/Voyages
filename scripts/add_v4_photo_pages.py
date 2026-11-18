@@ -72,7 +72,7 @@ document.addEventListener('click',function(e){
 .v4-photo-prev{left:0}.v4-photo-next{right:0}
 </style>"""
 html = html.replace('</body>', overlay_script+'</body>', 1)
-# Preserve full-page appearance on new collage screens.
+# Keep the photo-edit buttons clear of the floating gold star at top right.\n# Apply to all three cloned iframe documents (srcdoc is HTML-escaped).\nold_toolbar = '.toolbar{position:absolute;top:3.2%;right:5%;'\nnew_toolbar = '.toolbar{position:absolute;top:3.2%;right:14%;'\nassert html.count(old_toolbar) == 3, 'Expected three photo-page toolbars'\nhtml = html.replace(old_toolbar, new_toolbar)\n# Preserve full-page appearance on new collage screens.
 html += """\n<style id="memories-v4-extra-collage-pages">
 #collage2Screen,#collage3Screen{padding:0!important;margin:0!important}
 #collage2Screen iframe,#collage3Screen iframe{display:block;width:100%;height:100dvh;border:0}
