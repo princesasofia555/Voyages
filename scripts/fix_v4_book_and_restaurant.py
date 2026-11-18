@@ -42,7 +42,8 @@ assert s.count(new_toolbar)==3 and s.count(old_toolbar)==0
 s += '\\n<!-- memories-v4-verified-toolbar-and-backup -->\\n'
 # Backup must call the Java bridge that is ACTUALLY registered in MainActivity:
 # MemoriesAndroid.save(filename, base64), not nonexistent VoyagesAndroid.saveBackup.
-old_backup = "if(window.VoyagesAndroid&&typeof window.VoyagesAndroid.saveBackup==='function'){    window.VoyagesAndroid.saveBackup(json);"
+import re
+backup_pattern = r"if\(window\.VoyagesAndroid&&typeof window\.VoyagesAndroid\.saveBackup==='function'\)\s*\{\s*window\.VoyagesAndroid\.saveBackup\(json\);"
 new_backup = """if(window.MemoriesAndroid&&typeof window.MemoriesAndroid.save==='function'){
     const reader=new FileReader();
     reader.onloadend=()=>{
@@ -51,8 +52,8 @@ new_backup = """if(window.MemoriesAndroid&&typeof window.MemoriesAndroid.save===
       else alert('Backup could not be encoded');
     };
     reader.readAsDataURL(new Blob([json],{type:'application/json;charset=utf-8'}));"""
-assert s.count(old_backup)==1, 'Backup handler not found'
-s=s.replace(old_backup,new_backup,1)
+s, backup_count = re.subn(backup_pattern, lambda _: new_backup, s)
+assert backup_count == 1, ('Backup handler match count', backup_count)
 assert 'window.MemoriesAndroid.save(' in s
 p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
