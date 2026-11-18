@@ -101,5 +101,16 @@ old_submit = "items.push(obj);}persist();renderFlatMap();$('modal').classList.ad
 new_submit = "items.push(obj);}if(!persist())return;renderFlatMap();$('modal').classList.add('hidden');render();toast(old?'Experience updated':'Experience added')"
 assert s.count(old_submit)==1, 'Restaurant submit handler not found'
 s=s.replace(old_submit,new_submit,1)
+# Root cause: BASE re-import was matching by name/date, so a renamed
+# restaurant was re-added under its OLD name every time the app restarted.
+old_merge="if(memory._uid&&!items.some(r=>r._uid===memory._uid||(r.name===memory.name&&r.date===memory.date))){items.push(memory)}"
+new_merge="if(memory._uid&&!items.some(r=>r._uid===memory._uid||(r.i===memory.i&&r.date===memory.date)||(r.name===memory.name&&r.date===memory.date))){items.push(memory)}"
+assert s.count(old_merge)==1,('BASE merge',s.count(old_merge))
+s=s.replace(old_merge,new_merge,1)
+# Keep the user-entered name and allow matching photos by stable original index.
+old_restored="const existing=items.find(x=>x.name===restored.name&&x.date===restored.date);"
+new_restored="const existing=items.find(x=>(x.i===restored.i&&x.date===restored.date)||(x.name===restored.name&&x.date===restored.date));"
+assert s.count(old_restored)==1,('Photo restore',s.count(old_restored))
+s=s.replace(old_restored,new_restored,1)
 p.write_text(s,encoding="utf-8")
 print("Stable restaurant IDs preserved on save; back cover fills screen.")
