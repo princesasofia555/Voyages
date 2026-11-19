@@ -85,7 +85,7 @@ jobs:
             'card photo crop zoom':'function memoriesCropPhoto(img)' in html and 'memCropZoom' in html,
             'direct card photo editing':'memories-card-photo-direct-edit' in html and 'event.stopImmediatePropagation()' in html,
             'original V3 collage preserved':'z-index:9000;background:url(' not in html and html.count('MemoriesV3FreeCollage')>=1,
-            'three repositioned photo toolbars':html.count('.toolbar{position:absolute;top:3.2%;right:17%;')==3,
+            'three repositioned photo toolbars':html.count('.toolbar{position:absolute;top:3.2%;right:16%;')==3,
             'full-screen back cover':'memories-v4-back-cover-fullscreen' in html,
             'restaurant save correction':'if(!persist())return;renderFlatMap();' in html,
             'new Neusa visit':'16.11.2026' in html,
