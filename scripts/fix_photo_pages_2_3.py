@@ -13,7 +13,7 @@ for fid in ids:
     docs[fid]=html.unescape(found[0].group(2))
 # Pages 2 and 3 inherited obsolete pseudo-element art masks that split the
 # border and flowers into two pieces. Remove ONLY this legacy block.
-legacy=re.compile(r'\n#page::before,#page::after\{.*?\n#page::after\{left:0;bottom:0;.*?\\}\n',re.S)
+legacy=re.compile(r'\n#page::before,#page::after\{.*?\n#page::after\{left:0;bottom:0;.*?\}\n',re.S)
 assert not legacy.search(docs["freeCollageFrame"]), "First approved page unexpectedly has legacy masks"
 for fid in ids[1:]:
     doc=docs[fid]
