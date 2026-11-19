@@ -35,7 +35,9 @@ for number in (2, 3):
     clone = clone.replace('MemoriesV3FreeCollage', f'MemoriesV4FreeCollage{number}')
     clone = clone.replace('Free photo collage', f'Free photo collage page {number}')
     new_pages.append(clone)
-html = html[:end] + ''.join(new_pages) + html[end:]
+# Persist the modified first collage as well as its two clones.
+# Previously only the clones received the foreground CSS.
+html = html[:start] + original + ''.join(new_pages) + html[end:]
 html = html.replace(
     "const pages=['collage','list','hotels','map','end'];",
     "const pages=['collage','collage2','collage3','list','hotels','map','end'];",
