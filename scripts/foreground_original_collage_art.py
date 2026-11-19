@@ -46,7 +46,7 @@ old="""#page::before,#page::after{
 # HTML escaping inside srcdoc differs from normal CSS.
 marker='#page::before,#page::after'
 ending='height:24%;background-position:left bottom}'
-assert s.count(marker)>=2, f'Expected collage overlays, got {s.count(marker)}'
+assert s.count(marker)==3, f'Expected 3 collage overlays, got {s.count(marker)}'
 assert s.count(ending)>=2, f'Expected collage endings, got {s.count(ending)}'
 new="#page::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:9000;background:url("+overlay+") center/100% 100% no-repeat}#page::after{content:none}"
 count=s.count(marker)
