@@ -1,6 +1,6 @@
 """Put original gold ornaments, rose, bell and pen above movable collage photos."""
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageFilter
 from io import BytesIO
 import base64, html, re
 
@@ -14,22 +14,22 @@ assert m, 'Original approved collage artwork not found'
 raw=base64.b64decode(m.group(1))
 im=Image.open(BytesIO(raw)).convert('RGBA')
 w,h=im.size
-# Geometry-only foreground regions: never classify individual red/gold pixels.
-# This preserves the original rose petals, bell and pen without scattered dots.
+# Smooth localized overlay regions. Never use pixel-color thresholds or
+# angular polygon masks, which produced red speckles and hard white cuts.
 from PIL import ImageDraw
 mask=Image.new('L',(w,h),0)
 d=ImageDraw.Draw(mask)
-# Slim original frame around the whole page.
 edge=max(8,round(w*.025))
 d.rectangle((0,0,w,edge),fill=255)
 d.rectangle((0,h-edge,w,h),fill=255)
 d.rectangle((0,0,edge,h),fill=255)
 d.rectangle((w-edge,0,w,h),fill=255)
-# Top-left gold ornament only; no diagonal artwork across photographs.
-d.polygon([(0,0),(.53*w,0),(.53*w,.10*h),(.30*w,.10*h),(.20*w,.16*h),(.13*w,.25*h),(0,.25*h)],fill=255)
-# Bottom still-life stays complete, including the rose's pale interior.
-d.polygon([(0,.78*h),(.37*w,.78*h),(.48*w,.72*h),(.55*w,.67*h),(.76*w,.64*h),(.93*w,.67*h),(w,.62*h),(w,h),(0,h)],fill=255)
-# A single intact foreground illustration, never a pixel-by-pixel color cutout.
+# Soft top-left gold ornament, outside the main photo area.
+d.ellipse((-int(.25*w),-int(.18*h),int(.48*w),int(.31*h)),fill=255)
+# Soft complete bottom still-life (bell, pen, rose and leaves).
+d.rectangle((0,int(.86*h),w,h),fill=255)
+d.ellipse((int(.37*w),int(.66*h),int(1.06*w),int(1.02*h)),fill=255)
+mask=mask.filter(ImageFilter.GaussianBlur(max(4,round(w*.012))))
 im.putalpha(mask)
 buf=BytesIO();im.save(buf,format='PNG',optimize=True)
 overlay='data:image/png;base64,'+base64.b64encode(buf.getvalue()).decode()
