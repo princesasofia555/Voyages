@@ -47,13 +47,39 @@ jobs:
         run: python scripts/add_v4_card_photo_crop.py
       - name: Enable direct photo editing in card lists
         run: python scripts/add_v4_direct_card_photo_edit.py
-      - name: Build V4 test APK
-        run: gradle assembleDebug --no-daemon
+      - name: Check permanent signing secrets
+        env:
+          SIGNING_KEY: ${{ secrets.MEMORIES_KEYSTORE_BASE64 }}
+          SIGNING_STORE_PASS: ${{ secrets.MEMORIES_KEYSTORE_PASSWORD }}
+          SIGNING_ALIAS: ${{ secrets.MEMORIES_KEY_ALIAS }}
+          SIGNING_KEY_PASS: ${{ secrets.MEMORIES_KEY_PASSWORD }}
+        run: |
+          test -n "$SIGNING_KEY" && test -n "$SIGNING_STORE_PASS" && test -n "$SIGNING_ALIAS" && test -n "$SIGNING_KEY_PASS" || { echo "::error::Configure all four permanent Memories signing secrets"; exit 1; }
+      - name: Restore permanent release keystore
+        env:
+          SIGNING_KEY: ${{ secrets.MEMORIES_KEYSTORE_BASE64 }}
+        run: |
+          printf '%s' "$SIGNING_KEY" | base64 --decode > "$RUNNER_TEMP/memories-release.jks"
+          chmod 600 "$RUNNER_TEMP/memories-release.jks"
+          keytool -list -keystore "$RUNNER_TEMP/memories-release.jks" -storepass "${{ secrets.MEMORIES_KEYSTORE_PASSWORD }}" >/dev/null
+      - name: Build permanently signed release APK
+        env:
+          MEMORIES_KEYSTORE_PATH: ${{ runner.temp }}/memories-release.jks
+          MEMORIES_KEYSTORE_PASSWORD: ${{ secrets.MEMORIES_KEYSTORE_PASSWORD }}
+          MEMORIES_KEY_ALIAS: ${{ secrets.MEMORIES_KEY_ALIAS }}
+          MEMORIES_KEY_PASSWORD: ${{ secrets.MEMORIES_KEY_PASSWORD }}
+        run: gradle assembleRelease --no-daemon
+      - name: Verify signing certificate and package
+        run: |
+          APK="$(find app/build/outputs/apk/release -name '*.apk' -type f | head -n 1)"
+          test -s "$APK"
+          "${ANDROID_HOME}/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK"
+          "${ANDROID_HOME}/build-tools/35.0.0/aapt" dump badging "$APK" | grep "package: name='com.sofiamagalhaes.memories'"
       - name: Verify actual APK contains all requested fixes
         run: |
           python - <<'PY'
           import zipfile, glob
-          apk=glob.glob('app/build/outputs/apk/debug/*.apk')[0]
+          apk=glob.glob('app/build/outputs/apk/release/*.apk')[0]
           with zipfile.ZipFile(apk) as z:
               html=z.read('assets/index.html').decode('utf-8')
           checks={
@@ -74,5 +100,5 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: Memories-V4-Test-APK
-          path: app/build/outputs/apk/debug/*.apk
+          name: Memories-Permanent-Signed-APK
+          path: app/build/outputs/apk/release/*.apk
