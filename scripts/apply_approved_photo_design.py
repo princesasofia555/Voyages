@@ -23,7 +23,7 @@ ref = Frames()
 ref.feed(reference)
 assert len(ref.frames) == 3, "Approved reference must contain all three pages"
 for frame_id, approved in ref.frames.items():
-    pattern = r'(<iframe\\b[^>]*?\\bid="' + frame_id + r'"[^>]*?\\bsrcdoc=")(.*?)(")'
+    pattern = r'(<iframe\b[^>]*?\bid="' + frame_id + r'"[^>]*?\bsrcdoc=")(.*?)(")'
     matches = list(re.finditer(pattern, app, re.DOTALL))
     assert len(matches) == 1, f"Missing or duplicate {frame_id}"
     original = html.unescape(matches[0].group(2))
