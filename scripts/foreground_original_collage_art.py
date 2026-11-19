@@ -1,6 +1,6 @@
 """Put original gold ornaments, rose, bell and pen above movable collage photos."""
 from pathlib import Path
-from PIL import Image, ImageFilter
+from PIL import Image
 from io import BytesIO
 import base64, html, re
 
@@ -14,23 +14,22 @@ assert m, 'Original approved collage artwork not found'
 raw=base64.b64decode(m.group(1))
 im=Image.open(BytesIO(raw)).convert('RGBA')
 w,h=im.size
-pix=im.load()
-mask=Image.new('L',(w,h),0); out=mask.load()
-for y in range(h):
- for x in range(w):
-  r,g,b,_=pix[x,y]
-  # Preserve the actual original pixels, not newly drawn substitutes.
-  border=(x<42 or x>w-43 or y<58 or y>h-49)
-  top=(y<h*.25 and x<w*.54 and r>105 and g>r*.35 and g>40)
-  bottom=y>h*.60 and (
-    (r>125 and (g>35 or b>40)) or
-    (g>48 and g>r*.44) or
-    (r>140 and g>r*.24) or
-    (r<43 and g<38 and b<38 and y>h*.70 and x<w*.47)
-  )
-  if border or top or bottom:out[x,y]=255
-# Connect thin gold details and remove jagged holes, without repainting artwork.
-mask=mask.filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.GaussianBlur(1.2))
+# Geometry-only foreground regions: never classify individual red/gold pixels.
+# This preserves the original rose petals, bell and pen without scattered dots.
+from PIL import ImageDraw
+mask=Image.new('L',(w,h),0)
+d=ImageDraw.Draw(mask)
+# Slim original frame around the whole page.
+edge=max(8,round(w*.025))
+d.rectangle((0,0,w,edge),fill=255)
+d.rectangle((0,h-edge,w,h),fill=255)
+d.rectangle((0,0,edge,h),fill=255)
+d.rectangle((w-edge,0,w,h),fill=255)
+# Top-left gold ornament only; no diagonal artwork across photographs.
+d.polygon([(0,0),(.53*w,0),(.53*w,.10*h),(.30*w,.10*h),(.20*w,.16*h),(.13*w,.25*h),(0,.25*h)],fill=255)
+# Bottom still-life stays complete, including the rose's pale interior.
+d.polygon([(0,.78*h),(.37*w,.78*h),(.48*w,.72*h),(.55*w,.67*h),(.76*w,.64*h),(.93*w,.67*h),(w,.62*h),(w,h),(0,h)],fill=255)
+# A single intact foreground illustration, never a pixel-by-pixel color cutout.
 im.putalpha(mask)
 buf=BytesIO();im.save(buf,format='PNG',optimize=True)
 overlay='data:image/png;base64,'+base64.b64encode(buf.getvalue()).decode()
