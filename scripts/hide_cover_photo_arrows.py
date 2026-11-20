@@ -5,6 +5,8 @@ p=Path("app/src/main/assets/index.html")
 s=p.read_text(encoding="utf-8")
 assert 'id="collageScreen"' in s
 css="""<style id="memories-hide-cover-first-photo-arrows">
+body:has(#collageScreen.active) .v4-photo-prev,
+body:has(#collageScreen.active) .v4-photo-next,
 body:has(#collageScreen.active) .v4-photo-page-turns,
 body:has(#collageScreen.active) #memBookArrows,
 body:has(#coverScreen.active) #memBookArrows,
