@@ -59,6 +59,8 @@ jobs:
         run: python scripts/hide_cover_photo_arrows.py
       - name: Remove arrows from the actual book cover
         run: python scripts/remove_cover_arrows.py
+      - name: Remove all visible old page arrows while preserving swipe
+        run: python scripts/remove_all_visible_arrows.py
       - name: Verify user-approved photo artwork on all three pages
         run: python scripts/verify_approved_photo_design.py
       - name: Check permanent signing secrets
