@@ -14,6 +14,11 @@ parent=r"""
     return !!(el && el.closest && el.closest('button,a,input,textarea,select,[contenteditable="true"],[role="slider"],.mem-crop-controls,.modal'));
   }
   function go(direction){
+    const cover=document.getElementById('memoriesCover');
+    if(cover && !cover.classList.contains('is-hidden')){
+      if(direction==='next')cover.click();
+      return;
+    }
     const btn=document.getElementById(direction==='next'?'memBookNext':'memBookPrev');
     if(btn)btn.click();
   }
