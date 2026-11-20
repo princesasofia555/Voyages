@@ -54,13 +54,13 @@ child=r"""
  document.addEventListener('touchstart',function(e){
    if(e.touches.length!==1||editing(e.target)){start=null;return;}
    const t=e.touches[0];start={x:t.clientX,y:t.clientY};
- },{passive:true});
+ },{passive:true,capture:true});
  document.addEventListener('touchend',function(e){
    if(!start||e.changedTouches.length!==1){start=null;return;}
    const t=e.changedTouches[0],dx=t.clientX-start.x,dy=t.clientY-start.y;start=null;
    if(Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.35)return;
    parent.postMessage({type:'memories-collage-swipe',direction:dx<0?'next':'prev'},'*');
- },{passive:true});
+ },{passive:true,capture:true});
  document.addEventListener('touchcancel',()=>{start=null},{passive:true});
 })();
 </script>
