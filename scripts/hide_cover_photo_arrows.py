@@ -5,6 +5,10 @@ p=Path("app/src/main/assets/index.html")
 s=p.read_text(encoding="utf-8")
 assert 'id="collageScreen"' in s
 css="""<style id="memories-hide-cover-first-photo-arrows">
+/* Target the arrow container directly: no :has() dependency. */
+#collageScreen .v4-photo-page-turns,
+#collageScreen .v4-photo-prev,
+#collageScreen .v4-photo-next,
 body:has(#collageScreen.active) .v4-photo-prev,
 body:has(#collageScreen.active) .v4-photo-next,
 body:has(#collageScreen.active) .v4-photo-page-turns,
@@ -14,6 +18,7 @@ body:has(#frontScreen.active) #memBookArrows,
 body:has(#openingScreen.active) #memBookArrows,
 body:has(#coverScreen.active) .v4-photo-page-turns,
 body:has(#frontScreen.active) .v4-photo-page-turns{
+  display:none!important;visibility:hidden!important;
   opacity:0!important;pointer-events:none!important;
 }
 </style>"""
