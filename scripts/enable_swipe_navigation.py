@@ -20,13 +20,13 @@ parent=r"""
   document.addEventListener('touchstart',function(e){
     if(e.touches.length!==1||isInteractive(e.target)){start=null;return;}
     const t=e.touches[0];start={x:t.clientX,y:t.clientY};
-  },{passive:true});
+  },{passive:true,capture:true});
   document.addEventListener('touchend',function(e){
     if(!start||e.changedTouches.length!==1){start=null;return;}
     const t=e.changedTouches[0],dx=t.clientX-start.x,dy=t.clientY-start.y;start=null;
     if(Math.abs(dx)<THRESHOLD||Math.abs(dx)<Math.abs(dy)*VERTICAL_TOLERANCE)return;
     go(dx<0?'next':'prev');
-  },{passive:true});
+  },{passive:true,capture:true});
   document.addEventListener('touchcancel',()=>{start=null},{passive:true});
   window.addEventListener('message',function(e){
     if(!e.data||e.data.type!=='memories-collage-swipe')return;
