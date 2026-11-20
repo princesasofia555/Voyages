@@ -47,7 +47,7 @@ html = html.replace(
 )
 # The collage is an iframe: it captures touches, so parent document navigation
 # cannot receive taps on the page. Add explicit accessible turn controls above it.
-for page in ("collage", "collage2", "collage3"):
+for page in ("collage2", "collage3"):
     marker = f'<section id="{page}Screen"'
     start = html.index(marker)
     end = html.index('</section>', start)
