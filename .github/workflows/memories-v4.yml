@@ -49,6 +49,8 @@ jobs:
         run: python scripts/apply_approved_photo_design.py
       - name: Repair photo pages 2 and 3 without touching page 1
         run: python scripts/fix_photo_pages_2_3.py
+      - name: Remove literal escaped newline text from page footers
+        run: python scripts/remove_literal_newline_artifacts.py
       - name: Verify user-approved photo artwork on all three pages
         run: python scripts/verify_approved_photo_design.py
       - name: Check permanent signing secrets
