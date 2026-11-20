@@ -25,7 +25,6 @@ parent=r"""
     if(!start||e.changedTouches.length!==1){start=null;return;}
     const t=e.changedTouches[0],dx=t.clientX-start.x,dy=t.clientY-start.y;start=null;
     if(Math.abs(dx)<THRESHOLD||Math.abs(dx)<Math.abs(dy)*VERTICAL_TOLERANCE)return;
-    if(!document.body.classList.contains('mem-book-mode'))return;
     go(dx<0?'next':'prev');
   },{passive:true});
   document.addEventListener('touchcancel',()=>{start=null},{passive:true});
@@ -33,7 +32,6 @@ parent=r"""
     if(!e.data||e.data.type!=='memories-collage-swipe')return;
     const frames=['freeCollageFrame','freeCollageFrame2','freeCollageFrame3'];
     if(!frames.some(id=>document.getElementById(id)?.contentWindow===e.source))return;
-    if(!document.body.classList.contains('mem-book-mode'))return;
     go(e.data.direction);
   });
 })();
