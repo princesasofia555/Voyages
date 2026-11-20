@@ -39,7 +39,7 @@ assert s.count(old_toolbar)==3, ('Unexpected photo toolbar count',s.count(old_to
 s=s.replace(old_toolbar,new_toolbar)
 assert s.count(new_toolbar)==3 and s.count(old_toolbar)==0
 # Mark the actual HTML for inspection; assert the marker is packaged in the APK.
-s += '\\n<!-- memories-v4-verified-toolbar-and-backup -->\\n'
+s += "\n<!-- memories-v4-verified-toolbar-and-backup -->\n"
 # Backup must call the Java bridge that is ACTUALLY registered in MainActivity:
 # MemoriesAndroid.save(filename, base64), not nonexistent VoyagesAndroid.saveBackup.
 import re
