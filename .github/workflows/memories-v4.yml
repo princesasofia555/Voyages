@@ -61,6 +61,8 @@ jobs:
         run: python scripts/remove_cover_arrows.py
       - name: Remove all visible old page arrows while preserving swipe
         run: python scripts/remove_all_visible_arrows.py
+      - name: Remove original collageTurn arrow buttons at source
+        run: python scripts/remove_collage_turn_arrows.py
       - name: Delete arrow glyphs and overlay buttons from actual HTML
         run: python scripts/delete_arrow_elements.py
       - name: Verify user-approved photo artwork on all three pages
