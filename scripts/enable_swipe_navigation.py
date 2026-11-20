@@ -72,6 +72,6 @@ for fid in ("freeCollageFrame","freeCollageFrame2","freeCollageFrame3"):
     assert "memories-collage-swipe" not in doc
     doc=doc.replace("</body>",child+"</body>",1)
     s=s[:m.start(2)]+html.escape(doc,quote=True)+s[m.end(2):]
-assert s.count("memories-collage-swipe")==3
+assert s.count('id=&quot;memories-collage-swipe&quot;')==3 or s.count('id="memories-collage-swipe"')==3, "Swipe handler missing from one or more photo frames"
 p.write_text(s,encoding="utf-8")
 print("PASS: global horizontal swipe plus iframe swipe, vertical scroll and photo edits preserved")
